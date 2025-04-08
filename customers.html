@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Farmers - Agricultural Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: #fff; /* High white background */
+            color: #333;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .farmers-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .farmers-header h1 {
+            font-size: 2.5em;
+            color: #ff8c00; /* Low orange for headings */
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #ff8c00; /* Low orange border */
+            border-radius: 5px;
+            outline: none;
+            margin: 0 auto 20px;
+            display: block;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        .search-bar:focus {
+            border-color: #ffa500; /* Slightly brighter orange on focus */
+        }
+        .farmers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: #fff; /* High white table background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .farmers-table th, .farmers-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .farmers-table th {
+            background: #ff8c00; /* Low orange for table header */
+            color: #fff;
+            font-size: 1.1em;
+        }
+        .farmers-table tr:nth-child(even) {
+            background: #f9f9f9; /* Light gray for alternate rows */
+        }
+        .farmers-table tr:hover {
+            background: #fff5e6; /* Very light orange on hover */
+            transition: background 0.3s;
+        }
+        .farmer-actions button {
+            background: #ff8c00; /* Low orange for buttons */
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: background 0.3s;
+        }
+        .farmer-actions button:hover {
+            background: #ffa500; /* Slightly brighter orange on hover */
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background: #ff8c00; /* Low orange for pagination buttons */
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .pagination button:hover {
+            background: #ffa500; /* Slightly brighter orange on hover */
+        }
+        .farmer-details {
+            background: #fff; /* High white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .farmer-details h3 {
+            font-size: 1.5em;
+            color: #ff8c00; /* Low orange for headings */
+            margin-bottom: 15px;
+        }
+        .farmer-details p {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #333;
+        }
+        .farmer-details button {
+            background: #ff8c00; /* Low orange for close button */
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .farmer-details button:hover {
+            background: #ffa500; /* Slightly brighter orange on hover */
+        }
+    </style>
+</head>
+<body>
+    <div id="google_translate_element"></div>
+    <div class="farmers-header">
+        <h1>Farmers</h1>
+        <input type="text" class="search-bar" id="searchFarmers" placeholder="Search farmers...">
+    </div>
+    <table class="farmers-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Location</th>
+                <th>Farm Size (Acres)</th>
+                <th>Crops Grown</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>John Doe</td>
+                <td>john.doe@example.com</td>
+                <td>New York, USA</td>
+                <td>50</td>
+                <td>Wheat, Corn</td>
+                <td>+1-555-0101</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('001')">View</button>
+                    <button onclick="editFarmer('001')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Sarah Miller</td>
+                <td>sarah.miller@example.com</td>
+                <td>London, UK</td>
+                <td>30</td>
+                <td>Barley, Oats</td>
+                <td>+44-555-0102</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('002')">View</button>
+                    <button onclick="editFarmer('002')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Robert Johnson</td>
+                <td>robert.johnson@example.com</td>
+                <td>Tokyo, Japan</td>
+                <td>20</td>
+                <td>Rice, Soybeans</td>
+                <td>+81-555-0103</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('003')">View</button>
+                    <button onclick="editFarmer('003')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>004</td>
+                <td>Emily Clark</td>
+                <td>emily.clark@example.com</td>
+                <td>Paris, France</td>
+                <td>40</td>
+                <td>Grapes, Olives</td>
+                <td>+33-555-0104</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('004')">View</button>
+                    <button onclick="editFarmer('004')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>005</td>
+                <td>Michael Brown</td>
+                <td>michael.brown@example.com</td>
+                <td>Berlin, Germany</td>
+                <td>60</td>
+                <td>Potatoes, Carrots</td>
+                <td>+49-555-0105</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('005')">View</button>
+                    <button onclick="editFarmer('005')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>006</td>
+                <td>Lisa Davis</td>
+                <td>lisa.davis@example.com</td>
+                <td>Rome, Italy</td>
+                <td>25</td>
+                <td>Tomatoes, Basil</td>
+                <td>+39-555-0106</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('006')">View</button>
+                    <button onclick="editFarmer('006')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>007</td>
+                <td>David Wilson</td>
+                <td>david.wilson@example.com</td>
+                <td>Sydney, Australia</td>
+                <td>35</td>
+                <td>Cotton, Wheat</td>
+                <td>+61-555-0107</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('007')">View</button>
+                    <button onclick="editFarmer('007')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>008</td>
+                <td>Jessica Taylor</td>
+                <td>jessica.taylor@example.com</td>
+                <td>Seoul, South Korea</td>
+                <td>45</td>
+                <td>Rice, Peppers</td>
+                <td>+82-555-0108</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('008')">View</button>
+                    <button onclick="editFarmer('008')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>009</td>
+                <td>Thomas Lee</td>
+                <td>thomas.lee@example.com</td>
+                <td>Toronto, Canada</td>
+                <td>55</td>
+                <td>Maple, Apples</td>
+                <td>+1-555-0109</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('009')">View</button>
+                    <button onclick="editFarmer('009')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>010</td>
+                <td>Anna Smith</td>
+                <td>anna.smith@example.com</td>
+                <td>Mumbai, India</td>
+                <td>70</td>
+                <td>Sugarcane, Rice</td>
+                <td>+91-555-0110</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('010')">View</button>
+                    <button onclick="editFarmer('010')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>011</td>
+                <td>Carlos Rivera</td>
+                <td>carlos.rivera@example.com</td>
+                <td>Mexico City, Mexico</td>
+                <td>80</td>
+                <td>Corn, Avocados</td>
+                <td>+52-555-0111</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('011')">View</button>
+                    <button onclick="editFarmer('011')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>012</td>
+                <td>Maria Gonzalez</td>
+                <td>maria.gonzalez@example.com</td>
+                <td>Barcelona, Spain</td>
+                <td>65</td>
+                <td>Olives, Oranges</td>
+                <td>+34-555-0112</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('012')">View</button>
+                    <button onclick="editFarmer('012')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>013</td>
+                <td>James Kim</td>
+                <td>james.kim@example.com</td>
+                <td>Busan, South Korea</td>
+                <td>40</td>
+                <td>Garlic, Onions</td>
+                <td>+82-555-0113</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('013')">View</button>
+                    <button onclick="editFarmer('013')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>014</td>
+                <td>Emma Watson</td>
+                <td>emma.watson@example.com</td>
+                <td>Edinburgh, UK</td>
+                <td>50</td>
+                <td>Potatoes, Turnips</td>
+                <td>+44-555-0114</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('014')">View</button>
+                    <button onclick="editFarmer('014')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>015</td>
+                <td>Lucas Müller</td>
+                <td>lucas.muller@example.com</td>
+                <td>Munich, Germany</td>
+                <td>75</td>
+                <td>Barley, Hops</td>
+                <td>+49-555-0115</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('015')">View</button>
+                    <button onclick="editFarmer('015')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>016</td>
+                <td>Sofia Rossi</td>
+                <td>sofia.rossi@example.com</td>
+                <td>Milan, Italy</td>
+                <td>30</td>
+                <td>Tomatoes, Grapes</td>
+                <td>+39-555-0116</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('016')">View</button>
+                    <button onclick="editFarmer('016')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>017</td>
+                <td>Ahmed Khan</td>
+                <td>ahmed.khan@example.com</td>
+                <td>Lahore, Pakistan</td>
+                <td>90</td>
+                <td>Wheat, Cotton</td>
+                <td>+92-555-0117</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('017')">View</button>
+                    <button onclick="editFarmer('017')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>018</td>
+                <td>Olivia Brown</td>
+                <td>olivia.brown@example.com</td>
+                <td>Brisbane, Australia</td>
+                <td>60</td>
+                <td>Sugarcane, Pineapples</td>
+                <td>+61-555-0118</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('018')">View</button>
+                    <button onclick="editFarmer('018')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>019</td>
+                <td>Ethan Harris</td>
+                <td>ethan.harris@example.com</td>
+                <td>Chicago, USA</td>
+                <td>85</td>
+                <td>Corn, Soybeans</td>
+                <td>+1-555-0119</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('019')">View</button>
+                    <button onclick="editFarmer('019')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>020</td>
+                <td>Chloe Nguyen</td>
+                <td>chloe.nguyen@example.com</td>
+                <td>Hanoi, Vietnam</td>
+                <td>35</td>
+                <td>Rice, Coffee</td>
+                <td>+84-555-0120</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('020')">View</button>
+                    <button onclick="editFarmer('020')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>021</td>
+                <td>Henry Adams</td>
+                <td>henry.adams@example.com</td>
+                <td>Dublin, Ireland</td>
+                <td>45</td>
+                <td>Potatoes, Barley</td>
+                <td>+353-555-0121</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('021')">View</button>
+                    <button onclick="editFarmer('021')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>022</td>
+                <td>Ava Lopez</td>
+                <td>ava.lopez@example.com</td>
+                <td>Buenos Aires, Argentina</td>
+                <td>100</td>
+                <td>Soybeans, Wheat</td>
+                <td>+54-555-0122</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('022')">View</button>
+                    <button onclick="editFarmer('022')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>023</td>
+                <td>William Chen</td>
+                <td>william.chen@example.com</td>
+                <td>Shanghai, China</td>
+                <td>50</td>
+                <td>Rice, Tea</td>
+                <td>+86-555-0123</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('023')">View</button>
+                    <button onclick="editFarmer('023')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>024</td>
+                <td>Mia Patel</td>
+                <td>mia.patel@example.com</td>
+                <td>Ahmedabad, India</td>
+                <td>65</td>
+                <td>Cotton, Spices</td>
+                <td>+91-555-0124</td>
+                <td><span style="color: #2ecc71;">Active</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('024')">View</button>
+                    <button onclick="editFarmer('024')">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td>025</td>
+                <td>Daniel Silva</td>
+                <td>daniel.silva@example.com</td>
+                <td>São Paulo, Brazil</td>
+                <td>120</td>
+                <td>Coffee, Oranges</td>
+                <td>+55-555-0125</td>
+                <td><span style="color: #e74c3c;">Inactive</span></td>
+                <td class="farmer-actions">
+                    <button onclick="viewDetails('025')">View</button>
+                    <button onclick="editFarmer('025')">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <button onclick="changePage(-1)">Previous</button>
+        <button onclick="changePage(1)">Next</button>
+    </div>
+    <div class="farmer-details" id="farmerDetails" style="display: none;">
+        <h3>Farmer Details</h3>
+        <p><strong>ID:</strong> <span id="detailId"></span></p>
+        <p><strong>Name:</strong> <span id="detailName"></span></p>
+        <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+        <p><strong>Location:</strong> <span id="detailLocation"></span></p>
+        <p><strong>Farm Size (Acres):</strong> <span id="detailFarmSize"></span></p>
+        <p><strong>Crops Grown:</strong> <span id="detailCrops"></span></p>
+        <p><strong>Contact:</strong> <span id="detailContact"></span></p>
+        <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+        <button onclick="hideDetails()">Close</button>
+    </div>
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let farmers = [
+            { id: "001", name: "Srinivas Reddy", email: "john.doe@example.com", location: "New York, USA", farmSize: 50, crops: "Wheat, Corn", contact: "+1-555-0101", status: "Active" },
+            { id: "002", name: "Lakshmi Naidu", email: "sarah.miller@example.com", location: "London, UK", farmSize: 30, crops: "Barley, Oats", contact: "+44-555-0102", status: "Inactive" },
+            { id: "003", name: "Ramesh Goud", email: "robert.johnson@example.com", location: "Tokyo, Japan", farmSize: 20, crops: "Rice, Soybeans", contact: "+81-555-0103", status: "Active" },
+            { id: "004", name: "Anitha Rao", email: "emily.clark@example.com", location: "Paris, France", farmSize: 40, crops: "Grapes, Olives", contact: "+33-555-0104", status: "Inactive" },
+            { id: "005", name: "Venkat Yadav", email: "michael.brown@example.com", location: "Berlin, Germany", farmSize: 60, crops: "Potatoes, Carrots", contact: "+49-555-0105", status: "Active" },
+            { id: "006", name: "Swapna Chary", email: "lisa.davis@example.com", location: "Rome, Italy", farmSize: 25, crops: "Tomatoes, Basil", contact: "+39-555-0106", status: "Active" },
+            { id: "007", name: "Kiran Kumar", email: "david.wilson@example.com", location: "Sydney, Australia", farmSize: 35, crops: "Cotton, Wheat", contact: "+61-555-0107", status: "Inactive" },
+            { id: "008", name: "Sravani Mudiraj", email: "jessica.taylor@example.com", location: "Seoul, South Korea", farmSize: 45, crops: "Rice, Peppers", contact: "+82-555-0108", status: "Active" },
+            { id: "009", name: "Prasad Raju", email: "thomas.lee@example.com", location: "Toronto, Canada", farmSize: 55, crops: "Maple, Apples", contact: "+1-555-0109", status: "Active" },
+            { id: "010", name: "Divya Sree", email: "anna.smith@example.com", location: "Mumbai, India", farmSize: 70, crops: "Sugarcane, Rice", contact: "+91-555-0110", status: "Inactive" },
+            { id: "011", name: "Mahesh Konda", email: "carlos.rivera@example.com", location: "Mexico City, Mexico", farmSize: 80, crops: "Corn, Avocados", contact: "+52-555-0111", status: "Active" },
+            { id: "012", name: "Jyothi Bai", email: "maria.gonzalez@example.com", location: "Barcelona, Spain", farmSize: 65, crops: "Olives, Oranges", contact: "+34-555-0112", status: "Active" },
+            { id: "013", name: "Narender Netha", email: "james.kim@example.com", location: "Busan, South Korea", farmSize: 40, crops: "Garlic, Onions", contact: "+82-555-0113", status: "Inactive" },
+            { id: "014", name: "Saritha Palli", email: "emma.watson@example.com", location: "Edinburgh, UK", farmSize: 50, crops: "Potatoes, Turnips", contact: "+44-555-0114", status: "Active" },
+            { id: "015", name: "Bhaskar Vel", email: "lucas.muller@example.com", location: "Munich, Germany", farmSize: 75, crops: "Barley, Hops", contact: "+49-555-0115", status: "Active" },
+            { id: "016", name: "Padma Sri", email: "sofia.rossi@example.com", location: "Milan, Italy", farmSize: 30, crops: "Tomatoes, Grapes", contact: "+39-555-0116", status: "Inactive" },
+            { id: "017", name: "Suresh Gutta", email: "ahmed.khan@example.com", location: "Lahore, Pakistan", farmSize: 90, crops: "Wheat, Cotton", contact: "+92-555-0117", status: "Active" },
+            { id: "018", name: "Haritha Meda", email: "olivia.brown@example.com", location: "Brisbane, Australia", farmSize: 60, crops: "Sugarcane, Pineapples", contact: "+61-555-0118", status: "Active" },
+            { id: "019", name: "Chandra Shekar", email: "ethan.harris@example.com", location: "Chicago, USA", farmSize: 85, crops: "Corn, Soybeans", contact: "+1-555-0119", status: "Inactive" },
+            { id: "020", name: "Teja Varma", email: "chloe.nguyen@example.com", location: "Hanoi, Vietnam", farmSize: 35, crops: "Rice, Coffee", contact: "+84-555-0120", status: "Active" },
+            { id: "021", name: "Gopi Mudiraj", email: "henry.adams@example.com", location: "Dublin, Ireland", farmSize: 45, crops: "Potatoes, Barley", contact: "+353-555-0121", status: "Active" },
+            { id: "022", name: "Radhika Devi", email: "ava.lopez@example.com", location: "Buenos Aires, Argentina", farmSize: 100, crops: "Soybeans, Wheat", contact: "+54-555-0122", status: "Inactive" },
+            { id: "023", name: "Bharath goud", email: "william.chen@example.com", location: "Shanghai, China", farmSize: 50, crops: "Rice, Tea", contact: "+86-555-0123", status: "Active" },
+            { id: "024", name: "Naveen Patel", email: "mia.patel@example.com", location: "Ahmedabad, India", farmSize: 65, crops: "Cotton, Spices", contact: "+91-555-0124", status: "Active" },
+            { id: "025", name: "Sai Krishna", email: "daniel.silva@example.com", location: "São Paulo, Brazil", farmSize: 120, crops: "Coffee, Oranges", contact: "+55-555-0125", status: "Inactive" }
+        ];
+    
+        function changePage(direction) {
+            currentPage += direction;
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > Math.ceil(farmers.length / rowsPerPage)) currentPage = Math.ceil(farmers.length / rowsPerPage);
+            displayFarmers();
+        }
+    
+        function displayFarmers() {
+            const tbody = document.querySelector('.farmers-table tbody');
+            tbody.innerHTML = '';
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedFarmers = farmers.slice(start, end);
+            paginatedFarmers.forEach(farmer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${farmer.id}</td>
+                    <td>${farmer.name}</td>
+                    <td>${farmer.email}</td>
+                    <td>${farmer.location}</td>
+                    <td>${farmer.farmSize}</td>
+                    <td>${farmer.crops}</td>
+                    <td>${farmer.contact}</td>
+                    <td><span style="color: ${farmer.status === 'Active' ? '#2ecc71' : '#e74c3c'};">${farmer.status}</span></td>
+                    <td class="farmer-actions">
+                        <button onclick="viewDetails('${farmer.id}')">View</button>
+                        <button onclick="editFarmer('${farmer.id}')">Edit</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    
+        function viewDetails(id) {
+            const farmer = farmers.find(f => f.id === id);
+            document.getElementById('detailId').textContent = farmer.id;
+            document.getElementById('detailName').textContent = farmer.name;
+            document.getElementById('detailEmail').textContent = farmer.email;
+            document.getElementById('detailLocation').textContent = farmer.location;
+            document.getElementById('detailFarmSize').textContent = farmer.farmSize;
+            document.getElementById('detailCrops').textContent = farmer.crops;
+            document.getElementById('detailContact').textContent = farmer.contact;
+            document.getElementById('detailStatus').textContent = farmer.status;
+            document.getElementById('farmerDetails').style.display = 'block';
+        }
+    
+        function editFarmer(id) {
+            alert(`Editing farmer with ID: ${id}`);
+            // Add edit logic here
+        }
+    
+        function hideDetails() {
+            document.getElementById('farmerDetails').style.display = 'none';
+        }
+    
+        document.getElementById('searchFarmers').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            farmers = [
+                { id: "001", name: "Srinivas Reddy", email: "john.doe@example.com", location: "New York, USA", farmSize: 50, crops: "Wheat, Corn", contact: "+1-555-0101", status: "Active" },
+                { id: "002", name: "Lakshmi Naidu", email: "sarah.miller@example.com", location: "London, UK", farmSize: 30, crops: "Barley, Oats", contact: "+44-555-0102", status: "Inactive" },
+                { id: "003", name: "Ramesh Goud", email: "robert.johnson@example.com", location: "Tokyo, Japan", farmSize: 20, crops: "Rice, Soybeans", contact: "+81-555-0103", status: "Active" },
+                { id: "004", name: "Anitha Rao", email: "emily.clark@example.com", location: "Paris, France", farmSize: 40, crops: "Grapes, Olives", contact: "+33-555-0104", status: "Inactive" },
+                { id: "005", name: "Venkat Yadav", email: "michael.brown@example.com", location: "Berlin, Germany", farmSize: 60, crops: "Potatoes, Carrots", contact: "+49-555-0105", status: "Active" },
+                { id: "006", name: "Swapna Chary", email: "lisa.davis@example.com", location: "Rome, Italy", farmSize: 25, crops: "Tomatoes, Basil", contact: "+39-555-0106", status: "Active" },
+                { id: "007", name: "Kiran Kumar", email: "david.wilson@example.com", location: "Sydney, Australia", farmSize: 35, crops: "Cotton, Wheat", contact: "+61-555-0107", status: "Inactive" },
+                { id: "008", name: "Sravani Mudiraj", email: "jessica.taylor@example.com", location: "Seoul, South Korea", farmSize: 45, crops: "Rice, Peppers", contact: "+82-555-0108", status: "Active" },
+                { id: "009", name: "Prasad Raju", email: "thomas.lee@example.com", location: "Toronto, Canada", farmSize: 55, crops: "Maple, Apples", contact: "+1-555-0109", status: "Active" },
+                { id: "010", name: "Divya Sree", email: "anna.smith@example.com", location: "Mumbai, India", farmSize: 70, crops: "Sugarcane, Rice", contact: "+91-555-0110", status: "Inactive" },
+                { id: "011", name: "Mahesh Konda", email: "carlos.rivera@example.com", location: "Mexico City, Mexico", farmSize: 80, crops: "Corn, Avocados", contact: "+52-555-0111", status: "Active" },
+                { id: "012", name: "Jyothi Bai", email: "maria.gonzalez@example.com", location: "Barcelona, Spain", farmSize: 65, crops: "Olives, Oranges", contact: "+34-555-0112", status: "Active" },
+                { id: "013", name: "Narender Netha", email: "james.kim@example.com", location: "Busan, South Korea", farmSize: 40, crops: "Garlic, Onions", contact: "+82-555-0113", status: "Inactive" },
+                { id: "014", name: "Saritha Palli", email: "emma.watson@example.com", location: "Edinburgh, UK", farmSize: 50, crops: "Potatoes, Turnips", contact: "+44-555-0114", status: "Active" },
+                { id: "015", name: "Bhaskar Vel", email: "lucas.muller@example.com", location: "Munich, Germany", farmSize: 75, crops: "Barley, Hops", contact: "+49-555-0115", status: "Active" },
+                { id: "016", name: "Padma Sri", email: "sofia.rossi@example.com", location: "Milan, Italy", farmSize: 30, crops: "Tomatoes, Grapes", contact: "+39-555-0116", status: "Inactive" },
+                { id: "017", name: "Suresh Gutta", email: "ahmed.khan@example.com", location: "Lahore, Pakistan", farmSize: 90, crops: "Wheat, Cotton", contact: "+92-555-0117", status: "Active" },
+                { id: "018", name: "Haritha Meda", email: "olivia.brown@example.com", location: "Brisbane, Australia", farmSize: 60, crops: "Sugarcane, Pineapples", contact: "+61-555-0118", status: "Active" },
+                { id: "019", name: "Chandra Shekar", email: "ethan.harris@example.com", location: "Chicago, USA", farmSize: 85, crops: "Corn, Soybeans", contact: "+1-555-0119", status: "Inactive" },
+                { id: "020", name: "Teja Varma", email: "chloe.nguyen@example.com", location: "Hanoi, Vietnam", farmSize: 35, crops: "Rice, Coffee", contact: "+84-555-0120", status: "Active" },
+                { id: "021", name: "Gopi Mudiraj", email: "henry.adams@example.com", location: "Dublin, Ireland", farmSize: 45, crops: "Potatoes, Barley", contact: "+353-555-0121", status: "Active" },
+                { id: "022", name: "Radhika Devi", email: "ava.lopez@example.com", location: "Buenos Aires, Argentina", farmSize: 100, crops: "Soybeans, Wheat", contact: "+54-555-0122", status: "Inactive" },
+                { id: "023", name: "Bharath goud", email: "william.chen@example.com", location: "Shanghai, China", farmSize: 50, crops: "Rice, Tea", contact: "+86-555-0123", status: "Active" },
+                { id: "024", name: "Naveen Patel", email: "mia.patel@example.com", location: "Ahmedabad, India", farmSize: 65, crops: "Cotton, Spices", contact: "+91-555-0124", status: "Active" },
+                { id: "025", name: "Sai Krishna", email: "daniel.silva@example.com", location: "São Paulo, Brazil", farmSize: 120, crops: "Coffee, Oranges", contact: "+55-555-0125", status: "Inactive" }
+            ].filter(f => 
+                f.name.toLowerCase().includes(searchTerm) || 
+                f.email.toLowerCase().includes(searchTerm) || 
+                f.location.toLowerCase().includes(searchTerm) ||
+                f.crops.toLowerCase().includes(searchTerm)
+            );
+            displayFarmers();
+        });
+    
+        displayFarmers();
+    </script>
+    <script type="text/javascript">
+        function googleTranslateElementInit(){
+            new google.translate.TranslateElement(
+                {pageLanguage : 'en'},'google_translate_element');
+        }
+        </script>
+        <script type ="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

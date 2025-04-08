@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and global styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        /* Cart Page Styles */
+        .cart-page {
+            padding: 20px;
+        }
+
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+        }
+
+        .cart-item-details h3 {
+            font-size: 1.2rem;
+        }
+
+        .cart-summary {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .cart-summary p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cart-summary button {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-summary button:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Your Shopping Cart</h1>
+            <a href="index.html" class="view-cart-btn">Continue Shopping</a>
+        </div>
+    </header>
+
+    <main class="cart-page">
+        <div id="cart-container" class="cart-container"></div>
+        <div class="cart-summary">
+            <p>Total: $<span id="total">0.00</span></p>
+            <button onclick="clearCart()">Clear Cart</button>
+        </div>
+    </main>
+
+    <script>
+        // Render Cart items
+        const cartContainer = document.getElementById("cart-container");
+        const totalEl = document.getElementById("total");
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cartContainer.innerHTML = "";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.classList.add("cart-item");
+                div.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3>${item.name}</h3>
+                        <p>$${item.price.toFixed(2)} x ${item.quantity}</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                `;
+                cartContainer.appendChild(div);
+                total += item.price * item.quantity;
+            });
+
+            totalEl.textContent = total.toFixed(2);
+        }
+
+        // Remove item from the cart
+        function removeFromCart(index) {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        // Clear the entire cart and redirect to homepage
+        function clearCart() {
+            localStorage.removeItem("cart");
+            renderCart();
+            setTimeout(() => {
+                window.location.href = "index.html"; // Redirect to homepage
+            }, 1000); // Delay for a second before redirecting to allow user to see the cart is cleared
+        }
+
+        renderCart();
+    </script>
+</body>
+</html>

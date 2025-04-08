@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmerApp - Fresh Farm Produce Marketplace</title>
+    <meta name="google" content="notranslate">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --primary-color: #ff6f00;
+        --secondary-color: #ffa000;
+        --accent-color: #ff5722;
+        --dark-bg: #121212;
+        --darker-bg: #0d0d0d;
+        --card-bg: #1e1e1e;
+        --text-light: #e0e0e0;
+        --text-lighter: #f5f5f5;
+        --text-muted: #9e9e9e;
+        --success-color: #4CAF50;
+        --error-color: #f44336;
+        --info-color: #2196F3;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-light);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    /* Enhanced Navigation */
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--primary-color);
+        color: #fff;
+        padding: 15px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transition: var(--transition);
+    }
+
+    nav.scrolled {
+        padding: 10px 5%;
+        background-color: rgba(255, 111, 0, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        display: flex;
+        align-items: center;
+    }
+
+    .logo i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
+
+    nav ul {
+        list-style-type: none;
+        display: flex;
+        gap: 25px;
+        margin: 0;
+    }
+
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        padding: 5px 0;
+    }
+
+    nav ul li a:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #fff;
+        transition: var(--transition);
+    }
+
+    nav ul li a:hover:after {
+        width: 100%;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        position: relative;
+    }
+
+    .search-input {
+        padding: 10px 15px;
+        padding-right: 40px;
+        border: none;
+        border-radius: 25px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+        width: 200px;
+        transition: var(--transition);
+    }
+
+    .search-input:focus {
+        width: 250px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .search-button {
+        position: absolute;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* Hero Section with Animation */
+    .hero-section {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                          url('https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        height: 100vh;
+        min-height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        animation: fadeIn 1.5s ease-out;
+        max-width: 800px;
+        padding: 0 20px;
+        z-index: 2;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+        line-height: 1.2;
+    }
+
+    .hero-content p {
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .cta-buttons button {
+        background-color: var(--accent-color);
+        color: #fff;
+        border: none;
+        padding: 15px 35px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+    }
+
+    .cta-buttons button.secondary {
+        background-color: transparent;
+        border: 2px solid #fff;
+        box-shadow: none;
+    }
+
+    .cta-buttons button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+    }
+
+    .cta-buttons button.secondary:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-scroll-down {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 2rem;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+    }
+
+    /* Floating Elements Animation */
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .floating-element {
+        position: absolute;
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.2;
+        animation: float 15s infinite linear;
+    }
+
+    /* Product Categories */
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        font-weight: 700;
+        display: inline-block;
+        position: relative;
+    }
+
+    .section-title h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--accent-color);
+    }
+
+    .product-category {
+        padding: 80px 5%;
+        background-color: var(--darker-bg);
+        position: relative;
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .category-title {
+        font-size: 2rem;
+        color: var(--text-lighter);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .category-description {
+        color: var(--text-muted);
+        max-width: 600px;
+        margin-bottom: 20px;
+    }
+
+    .view-all {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: var(--transition);
+    }
+
+    .view-all:hover {
+        color: var(--accent-color);
+        transform: translateX(5px);
+    }
+
+    .product-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+    }
+
+    .product-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: var(--success-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    .product-badge.organic {
+        background-color: var(--success-color);
+    }
+
+    .product-badge.sale {
+        background-color: var(--error-color);
+    }
+
+    .product-badge.new {
+        background-color: var(--info-color);
+    }
+
+    .product-card-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .product-card:hover .product-card-img {
+        transform: scale(1.05);
+    }
+
+    .product-card-content {
+        padding: 20px;
+    }
+
+    .product-card h3 {
+        font-size: 1.3rem;
+        color: var(--text-lighter);
+        margin-bottom: 10px;
+    }
+
+    .product-card p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        min-height: 60px;
+    }
+
+    .product-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .product-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .product-price .old-price {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-decoration: line-through;
+        margin-left: 5px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .add-button,
+    .remove-button,
+    .wishlist-button {
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .add-button {
+        background-color: var(--accent-color);
+        color: #fff;
+    }
+
+    .add-button:hover {
+        background-color: #e64a19;
+        transform: scale(1.05);
+    }
+
+    .remove-button {
+        background-color: #616161;
+        color: #fff;
+    }
+
+    .remove-button:hover {
+        background-color: #424242;
+        transform: scale(1.05);
+    }
+
+    .wishlist-button {
+        background-color: transparent;
+        color: var(--text-muted);
+        border: 1px solid var(--text-muted);
+    }
+
+    .wishlist-button:hover {
+        color: var(--error-color);
+        border-color: var(--error-color);
+    }
+
+    .wishlist-button.active {
+        color: var(--error-color);
+        border-color: var(--error-color);
+        background-color: rgba(244, 67, 54, 0.1);
+    }
+
+    /* Farmer Spotlight Section */
+    .farmers-section {
+        padding: 80px 5%;
+        background-color: var(--dark-bg);
+        text-align: center;
+    }
+
+    .farmers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .farmer-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 30px 20px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        text-align: center;
+    }
+
+    .farmer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .farmer-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-color);
+        margin: 0 auto 15px;
+    }
+
+    .farmer-name {
+        font-size: 1.3rem;
+        color: var(--text-lighter);
+        margin-bottom: 5px;
+    }
+
+    .farmer-location {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .farmer-bio {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .farmer-products {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .product-tag {
+        background-color: rgba(255, 111, 0, 0.2);
+        color: var(--primary-color);
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .view-farm-btn {
+        background-color: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .view-farm-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+        padding: 80px 5%;
+        background-color: var(--darker-bg);
+    }
+
+    .testimonials-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 30px;
+        padding: 20px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .testimonial-card {
+        min-width: 300px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: var(--shadow);
+        scroll-snap-align: start;
+        transition: var(--transition);
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .testimonial-rating {
+        color: #FFD700;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 20px;
+        color: var(--text-light);
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-info h4 {
+        color: var(--text-lighter);
+        margin-bottom: 5px;
+    }
+
+    .author-info p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* Subscription Section */
+    .subscription-section {
+        padding: 80px 5%;
+        background-color: var(--dark-bg);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .subscription-plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .subscription-plan {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 40px 30px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .subscription-plan:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .subscription-plan.popular:before {
+        content: 'Most Popular';
+        position: absolute;
+        top: 15px;
+        right: -30px;
+        background-color: var(--accent-color);
+        color: white;
+        padding: 5px 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transform: rotate(45deg);
+    }
+
+    .plan-name {
+        font-size: 1.5rem;
+        color: var(--text-lighter);
+        margin-bottom: 15px;
+    }
+
+    .plan-price {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .plan-price span {
+        font-size: 1rem;
+        color: var(--text-muted);
+    }
+
+    .plan-features {
+        list-style: none;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .plan-features li {
+        margin-bottom: 12px;
+        color: var(--text-light);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .plan-features li i {
+        color: var(--success-color);
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+
+    .subscribe-button {
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .subscribe-button:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255, 111, 0, 0.3);
+    }
+
+    /* Cart System */
+    .cart-icon {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: var(--primary-color);
+        color: #fff;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: var(--transition);
+        z-index: 999;
+    }
+
+    .cart-icon:hover {
+        background-color: var(--accent-color);
+        transform: scale(1.1);
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: var(--error-color);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cart-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+    }
+
+    .cart-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .cart-page {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 400px;
+        height: 100vh;
+        background-color: var(--card-bg);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.4);
+        transform: translateX(100%);
+        transition: transform 0.4s ease-in-out;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cart-page.active {
+        transform: translateX(0);
+    }
+
+    .cart-header {
+        padding: 20px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-header h3 {
+        font-size: 1.3rem;
+        color: var(--text-lighter);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cart-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .cart-close:hover {
+        color: var(--error-color);
+        transform: rotate(90deg);
+    }
+
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .cart-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .cart-empty i {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+    }
+
+    .cart-item {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #333;
+    }
+
+    .cart-item-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .cart-item-info {
+        flex: 1;
+    }
+
+    .cart-item-info h4 {
+        font-size: 1rem;
+        color: var(--text-lighter);
+        margin-bottom: 5px;
+    }
+
+    .cart-item-info p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    .cart-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .quantity-btn {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: #333;
+        color: white;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .quantity-btn:hover {
+        background-color: var(--primary-color);
+    }
+
+    .quantity {
+        min-width: 30px;
+        text-align: center;
+    }
+
+    .remove-item {
+        background: none;
+        border: none;
+        color: var(--error-color);
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .cart-footer {
+        padding: 20px;
+        border-top: 1px solid #333;
+    }
+
+    .cart-subtotal {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .cart-subtotal span:last-child {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .cart-checkout {
+        display: block;
+        width: 100%;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-bottom: 10px;
+    }
+
+    .cart-checkout:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-3px);
+    }
+
+    .cart-track {
+        display: block;
+        width: 100%;
+        background-color: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .cart-track:hover {
+        background-color: rgba(255, 111, 0, 0.1);
+    }
+
+    /* Chatbot System */
+    .chatbot-open {
+        position: fixed;
+        bottom: 30px;
+        right: 100px;
+        background-color: var(--success-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: var(--transition);
+    }
+
+    .chatbot-open:hover {
+        background-color: #388E3C;
+        transform: scale(1.1);
+    }
+
+    .chatbot-container {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 350px;
+        max-height: 500px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .chatbot-container.active {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .chatbot-header {
+        background-color: var(--success-color);
+        color: white;
+        padding: 15px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chatbot-header i {
+        margin-right: 10px;
+    }
+
+    .chatbot-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .chatbot-toggle:hover {
+        transform: rotate(90deg);
+    }
+
+    .chatbot-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .user-message {
+        align-self: flex-end;
+        background-color: var(--success-color);
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+
+    .bot-message {
+        align-self: flex-start;
+        background-color: #e0e0e0;
+        color: #333;
+        border-bottom-left-radius: 5px;
+    }
+
+    .chatbot-input-area {
+        display: flex;
+        padding: 10px;
+        background-color: white;
+        border-top: 1px solid #ddd;
+    }
+
+    #chatbot-input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        outline: none;
+        font-size: 14px;
+    }
+
+    .chatbot-input-area button {
+        background-color: var(--success-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chatbot-input-area button:hover {
+        background-color: #388E3C;
+    }
+
+    .chatbot-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-top: 1px solid #eee;
+    }
+
+    .suggestion-chip {
+        background-color: #e0e0e0;
+        color: #333;
+        border: none;
+        border-radius: 15px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .suggestion-chip:hover {
+        background-color: #d0d0d0;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+        padding: 60px 5%;
+        background-color: var(--primary-color);
+        text-align: center;
+        color: white;
+    }
+
+    .newsletter-content {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .newsletter-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .newsletter-text {
+        margin-bottom: 25px;
+        opacity: 0.9;
+    }
+
+    .newsletter-form {
+        display: flex;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .newsletter-input {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 30px 0 0 30px;
+        font-size: 1rem;
+        outline: none;
+    }
+
+    .newsletter-button {
+        padding: 15px 25px;
+        background-color: var(--darker-bg);
+        color: white;
+        border: none;
+        border-radius: 0 30px 30px 0;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .newsletter-button:hover {
+        background-color: #000;
+    }
+
+    /* Footer */
+    footer {
+        background-color: var(--darker-bg);
+        padding: 60px 5% 30px;
+        color: var(--text-light);
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .footer-column h4 {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .footer-column h4:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--primary-color);
+    }
+
+    .footer-links {
+        list-style: none;
+    }
+
+    .footer-links li {
+        margin-bottom: 10px;
+    }
+
+    .footer-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-color);
+        transform: translateX(5px);
+    }
+
+    .footer-social {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: var(--transition);
+    }
+
+    .social-icon:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid #333;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-20px); }
+        60% { transform: translateY(-10px); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .hero-content h1 {
+            font-size: 3.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        .nav-links {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-150%);
+            transition: transform 0.4s ease;
+            z-index: 999;
+        }
+
+        .nav-links.active {
+            transform: translateY(0);
+        }
+
+        nav ul {
+            flex-direction: column;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .search-container {
+            margin: 15px 0 0;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+        }
+
+        .search-input:focus {
+            width: 100%;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cta-buttons button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .cart-page {
+            width: 100%;
+        }
+
+        .chatbot-open {
+            right: 20px;
+            bottom: 100px;
+        }
+
+        .chatbot-container {
+            right: 20px;
+            width: calc(100% - 40px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-content h1 {
+            font-size: 2.2rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+        }
+
+        .newsletter-form {
+            flex-direction: column;
+        }
+
+        .newsletter-input {
+            border-radius: 30px;
+            margin-bottom: 10px;
+        }
+
+        .newsletter-button {
+            border-radius: 30px;
+        }
+    }
+
+    /* Notification Styles */
+    .notification {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .notification.show {
+        opacity: 1;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .notification i {
+        color: #4CAF50;
+    }
+    </style>
+</head>
+<body>
+    <div id="google_translate_element"></div>
+    <!-- Navigation -->
+    <nav id="mainNav">
+        <div class="logo">
+            <i class="fas fa-leaf"></i>
+            <span>FarmerApp</span>
+        </div>
+        
+        <div class="nav-links" id="navLinks">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#farmers">Farmers</a></li>
+                <li><a href="#subscriptions">Subscriptions</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search for produce...">
+                <button class="search-button" onclick="performSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="hero-content">
+            <h1>Farm Fresh to Your Doorstep</h1>
+            <p>Discover the freshest organic produce from local farmers near you. Delivered straight to your home!</p>
+            <div class="cta-buttons">
+                <a href="#products">
+                <button onclick="scrollToSection('products')">
+                    <i class="fas fa-shopping-basket"></i> Shop Now
+                </button></a>
+                <button class="secondary" onclick="scrollToSection('subscriptions')">
+                    <i class="fas fa-calendar-alt"></i> View Plans
+                </button>
+            </div>
+        </div>
+        
+        <div class="hero-scroll-down" onclick="scrollToSection('products')">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        
+        <div class="floating-elements">
+            <div class="floating-element" style="top: 20%; left: 10%; width: 80px; height: 80px; background-image: url('https://cdn.pixabay.com/photo/2013/07/13/01/22/apple-155419_960_720.png'); animation-delay: 0s;"></div>
+            <div class="floating-element" style="top: 70%; left: 80%; width: 60px; height: 60px; background-image: url('https://cdn.pixabay.com/photo/2013/07/13/01/22/banana-155417_960_720.png'); animation-delay: 2s;"></div>
+            <div class="floating-element" style="top: 40%; left: 85%; width: 70px; height: 70px; background-image: url('https://cdn.pixabay.com/photo/2013/07/13/01/22/carrot-155418_960_720.png'); animation-delay: 4s;"></div>
+            <div class="floating-element" style="top: 80%; left: 15%; width: 50px; height: 50px; background-image: url('https://cdn.pixabay.com/photo/2013/07/13/01/21/strawberry-155595_960_720.png'); animation-delay: 6s;"></div>
+        </div>
+    </section>
+  
+    <!-- Products Section -->
+   <!-- Fruits Section -->
+<div class="category-header" id="products">
+    <div>
+        <h3 class="category-title">Seasonal Fruits</h3>
+        <p class="category-description">Hand-picked at peak ripeness for maximum flavor and nutrition. All organic and locally sourced.</p>
+    </div>
+    <a href="#" class="view-all">View All Fruits <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<div class="product-cards">
+    <!-- Mango -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://img.freepik.com/premium-photo/basket-mangoes-black-background_705708-19658.jpg?w=900" alt="Fresh Mangoes" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Mangoes</h3>
+            <p>Delicious and juicy Alphonso mangoes, perfect for smoothies or snacks. Grown in sunny orchards.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹249 <span class="old-price">₹290</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Mangoes')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Mangoes', 249, 'https://img.freepik.com/premium-photo/basket-mangoes-black-background_705708-19658.jpg?w=900', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apple -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.6CwR_lRndpIaKVYUknHAJgHaE7?rs=1&pid=ImgDetMain" alt="Fresh Apples" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Apples</h3>
+            <p>Crisp and sweet Honeycrisp apples, a perfect healthy snack. Packed with fiber and vitamins.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹124 <span class="old-price">₹149</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Apples')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Apples', 124, 'https://th.bing.com/th/id/OIP.6CwR_lRndpIaKVYUknHAJgHaE7?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banana -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.zFCaixfuL8irFVNv5OQQ3QHaHa?w=626&h=626&rs=1&pid=ImgDetMain" alt="Fresh Bananas" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Bananas</h3>
+            <p>Ripe organic bananas, perfect for breakfast or desserts. Great source of potassium and energy.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹57 <span class="old-price">₹66</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Bananas')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Bananas', 57, 'https://th.bing.com/th/id/OIP.zFCaixfuL8irFVNv5OQQ3QHaHa?w=626&h=626&rs=1&pid=ImgDetMain')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grapes -->
+    <div class="product-card">
+        <span class="product-badge sale">Sale</span>
+        <img src="https://th.bing.com/th/id/OIP.B-wt_ex3yKB8CDDPe2DkNQHaE7?rs=1&pid=ImgDetMain" alt="Fresh Grapes" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Grapes</h3>
+            <p>Sweet and juicy red seedless grapes, a refreshing snack or addition to any dish.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹331 <span class="old-price">₹415</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Grapes')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Grapes', 331, 'https://th.bing.com/th/id/OIP.B-wt_ex3yKB8CDDPe2DkNQHaE7?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oranges -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.hyfqRh-2DunY6DiAZr-rNAHaE7?rs=1&pid=ImgDetMain" alt="Fresh Oranges" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Oranges</h3>
+            <p>Juicy and sweet navel oranges, packed with vitamin C for immune support.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹107 <span class="old-price">₹124</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Oranges')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Oranges', 107, 'https://th.bing.com/th/id/OIP.hyfqRh-2DunY6DiAZr-rNAHaE7?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strawberries -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://img.freepik.com/premium-photo/basket-strawberries-black-background_705708-19709.jpg" alt="Fresh Strawberries" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Strawberries</h3>
+            <p>Sweet and fragrant strawberries, perfect for desserts, smoothies or fresh eating.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹373 <span class="old-price">₹415</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Strawberries')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Strawberries', 373, 'https://img.freepik.com/premium-photo/basket-strawberries-black-background_705708-19709.jpg', 'pint')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blueberries -->
+    <div class="product-card">
+        <span class="product-badge new">New</span>
+        <img src="https://th.bing.com/th/id/R.f692898590577a033cc6d3d91deebfeb?rik=YyywldBQYJUlJQ&riu=http%3a%2f%2ffreedesignfile.com%2fupload%2f2016%2f10%2fBlueberries-on-black-background-Stock-Photo-05.jpg&ehk=2G7mVjkG8QSWXq8BxrEc5F5pYyvOh4w0QCl6Xv50tVU%3d&risl=&pid=ImgRaw&r=0" alt="Fresh Blueberries" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Blueberries</h3>
+            <p>Antioxidant-rich blueberries, perfect for baking, smoothies or healthy snacking.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹497 <span class="old-price">₹539</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Blueberries')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Blueberries', 497, 'https://th.bing.com/th/id/R.f692898590577a033cc6d3d91deebfeb?rik=YyywldBQYJUlJQ&riu=http%3a%2f%2ffreedesignfile.com%2fupload%2f2016%2f10%2fBlueberries-on-black-background-Stock-Photo-05.jpg&ehk=2G7mVjkG8QSWXq8BxrEc5F5pYyvOh4w0QCl6Xv50tVU%3d&risl=&pid=ImgRaw&r=0', 'pint')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pineapple -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.s-j_0SOK-3uSYLCMNHto_gHaEJ?rs=1&pid=ImgDetMain" alt="Fresh Pineapple" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Pineapple</h3>
+            <p>Tropical sweet pineapple, rich in bromelain enzyme that aids digestion.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹331</div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Pineapple')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Pineapple', 331, 'https://th.bing.com/th/id/OIP.s-j_0SOK-3uSYLCMNHto_gHaEJ?rs=1&pid=ImgDetMain')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+       <!-- Vegetables Section -->
+<div class="category-header" style="margin-top: 60px;">
+    <div>
+        <h3 class="category-title">Farm Fresh Vegetables</h3>
+        <p class="category-description">Grown with care and harvested at peak freshness for optimal taste and nutrition.</p>
+    </div>
+    <a href="#" class="view-all">View All Vegetables <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<div class="product-cards">
+    <!-- Carrots -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.eORTWVfudunW06BOVZgBUAHaEJ?rs=1&pid=ImgDetMain" alt="Fresh Carrots" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Carrots</h3>
+            <p>Crisp and sweet organic carrots, perfect for salads, snacks or juicing. Rich in beta-carotene.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹107 <span class="old-price">₹124</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Carrots')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Carrots', 107, 'https://th.bing.com/th/id/OIP.eORTWVfudunW06BOVZgBUAHaEJ?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lettuce -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://img.freepik.com/premium-photo/basket-lettuce-with-BLACK-background_662214-646434.jpg" alt="Fresh Lettuce" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Lettuce</h3>
+            <p>Crisp and fresh organic romaine lettuce, perfect for salads or sandwiches. Grown hydroponically.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹207</div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Lettuce')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Lettuce', 207, 'https://img.freepik.com/premium-photo/basket-lettuce-with-BLACK-background_662214-646434.jpg')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tomatoes -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://img.freepik.com/premium-photo/basket-full-tomatoes-BLACK-background_877015-995.jpg" alt="Fresh Tomatoes" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Tomatoes</h3>
+            <p>Vine-ripened heirloom tomatoes, bursting with flavor. Perfect for sauces, salads or sandwiches.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹331 <span class="old-price">₹356</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Tomatoes')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Tomatoes', 331, 'https://img.freepik.com/premium-photo/basket-full-tomatoes-BLACK-background_877015-995.jpg', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avocado -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.bWpVqRjRba717I676Hs32QHaHa?rs=1&pid=ImgDetMain" alt="Fresh Avocados" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Avocados</h3>
+            <p>Creamy Hass avocados, perfect for guacamole, toast or salads. Packed with healthy fats.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹165 <span class="old-price">₹207</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Avocados')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Avocados', 165, 'https://th.bing.com/th/id/OIP.bWpVqRjRba717I676Hs32QHaHa?rs=1&pid=ImgDetMain')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bell Peppers -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.HQWGo8NXo37uHCf8genvlgHaHa?rs=1&pid=ImgDetMain" alt="Bell Peppers" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Bell Peppers</h3>
+            <p>Colorful mix of red, yellow and green bell peppers. Sweet and crunchy, great for stir-fries.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹248 <span class="old-price">₹273</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Bell Peppers')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Bell Peppers', 248, 'https://th.bing.com/th/id/OIP.HQWGo8NXo37uHCf8genvlgHaHa?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cucumbers -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.5bR8FBPh2IEvSkFugkusBQHaE7?rs=1&pid=ImgDetMain" alt="Fresh Cucumbers" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Cucumbers</h3>
+            <p>Crisp and refreshing cucumbers, perfect for salads, pickling or healthy snacking.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹124 <span class="old-price">₹140</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Cucumbers')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Cucumbers', 124, 'https://th.bing.com/th/id/OIP.5bR8FBPh2IEvSkFugkusBQHaE7?rs=1&pid=ImgDetMain', 'each')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Broccoli -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.hUnB4CQQxLqHeGzdYKk-sAHaHa?rs=1&pid=ImgDetMain" alt="Fresh Broccoli" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Broccoli</h3>
+            <p>Nutrient-packed broccoli florets, great steamed, roasted or in stir-fries.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹190 <span class="old-price">₹215</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Broccoli')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Broccoli', 190, 'https://th.bing.com/th/id/OIP.hUnB4CQQxLqHeGzdYKk-sAHaHa?rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Potatoes -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://th.bing.com/th/id/OIP.fDgp0pnmS_jBByYuOAn9ewHaDt?w=800&h=400&rs=1&pid=ImgDetMain" alt="Fresh Potatoes" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Potatoes</h3>
+            <p>Versatile Yukon Gold potatoes, perfect for baking, mashing or roasting.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹99 <span class="old-price">₹115</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Potatoes')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Potatoes', 99, 'https://th.bing.com/th/id/OIP.fDgp0pnmS_jBByYuOAn9ewHaDt?w=800&h=400&rs=1&pid=ImgDetMain', 'lb')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+       <!-- Herbs & Spices Section -->
+<div class="category-header" style="margin-top: 60px;">
+    <div>
+        <h3 class="category-title">Herbs & Spices</h3>
+        <p class="category-description">Freshly picked aromatic herbs and premium spices to elevate your cooking.</p>
+    </div>
+    <a href="#" class="view-all">View All Herbs <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<div class="product-cards">
+    <!-- Basil -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://gardeningsoul.com/wp-content/uploads/2020/08/Basil-In-Hanging-Basket.jpg" alt="Fresh Basil" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Basil</h3>
+            <p>Fragrant sweet basil leaves, perfect for Italian dishes, pesto or garnishing.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹248 <span class="old-price">₹273</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Basil')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Basil', 248, 'https://gardeningsoul.com/wp-content/uploads/2020/08/Basil-In-Hanging-Basket.jpg', 'bunch')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thyme -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://gardeningsoul.com/wp-content/uploads/2021/03/basil-2.png" alt="Fresh Thyme" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Thyme</h3>
+            <p>Fragrant thyme, great for seasoning meats, soups and roasted vegetables.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹207 <span class="old-price">₹232</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Thyme')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Thyme', 207, 'https://gardeningsoul.com/wp-content/uploads/2021/03/basil-2.png', 'bunch')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rosemary -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://thumbs.dreamstime.com/b/fresh-rosemary-18739870.jpg" alt="Fresh Rosemary" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Rosemary</h3>
+            <p>Woody aromatic rosemary, perfect for roasted meats, potatoes and breads.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹248 <span class="old-price">₹273</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Rosemary')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Rosemary', 248, 'https://thumbs.dreamstime.com/b/fresh-rosemary-18739870.jpg', 'bunch')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cilantro -->
+    <div class="product-card">
+        <span class="product-badge organic">Organic</span>
+        <img src="https://i.pinimg.com/originals/8b/86/bf/8b86bf7c39597a178401748bb7689260.jpg" alt="Fresh Cilantro" class="product-card-img">
+        <div class="product-card-content">
+            <h3>Fresh Cilantro</h3>
+            <p>Bright, citrusy cilantro essential for Mexican, Asian and Indian cuisine.</p>
+            <div class="product-card-footer">
+                <div class="product-price">₹165 <span class="old-price">₹190</span></div>
+                <div class="product-actions">
+                    <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Cilantro')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="add-button" onclick="addToCart('Fresh Cilantro', 165, 'https://i.pinimg.com/originals/8b/86/bf/8b86bf7c39597a178401748bb7689260.jpg', 'bunch')">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <!-- Farmers Spotlight Section -->
+    <section class="farmers-section" id="farmers">
+        <div class="section-title">
+            <h2>Meet Our Farmers</h2>
+        </div>
+        
+        <p style="max-width: 700px; margin: 0 auto 40px; color: var(--text-muted);">
+            We partner with local farmers who share our commitment to sustainable, ethical farming practices. 
+            Get to know the hardworking people behind your food.
+        </p>
+        
+        <div class="farmers-grid">
+            <!-- Farmer 1 -->
+            <div class="farmer-card">
+                <img src="https://thumbs.dreamstime.com/b/happy-indian-farmer-front-fodder-field-191598737.jpg" alt="Farmer Rajahmundry" class="farmer-avatar">
+                <h3 class="farmer-name">Raja Reddy</h3>
+                <p class="farmer-location">
+                    <i class="fas fa-map-marker-alt"></i> Sunnyvale Organic Farms, UP
+                </p>
+                <p class="farmer-bio">
+                    Specializing in organic fruits and vegetables for over 20 years. Committed to sustainable farming and soil regeneration techniques.
+                </p>
+                <div class="farmer-products">
+                    <span class="product-tag">Apples</span>
+                    <span class="product-tag">Berries</span>
+                    <span class="product-tag">Leafy Greens</span>
+                </div>
+                <button class="view-farm-btn" onclick="viewFarmerProfile('Rajahmundry')">
+                    View Farm
+                </button>
+            </div>
+            
+            <!-- Farmer 2 -->
+            <!-- Farmer 2 -->
+<div class="farmer-card">
+    <img src="https://thumbs.dreamstime.com/b/indian-farmer-india-portrait-traditional-turban-his-head-66694207.jpg" alt="Farmer Srinivas Reddy" class="farmer-avatar">
+    <h3 class="farmer-name">Srinivas Roa</h3>
+    <p class="farmer-location">
+        <i class="fas fa-map-marker-alt"></i> Green Pastures Dairy, AP
+    </p>
+    <p class="farmer-bio">
+        Third-generation dairy farmer producing high-quality milk and cheese from grass-fed cows raised on open pastures.
+    </p>
+    <div class="farmer-products">
+        <span class="product-tag">Milk</span>
+        <span class="product-tag">Cheese</span>
+        <span class="product-tag">Yogurt</span>
+    </div>
+    <button class="view-farm-btn" onclick="viewFarmerProfile('Srinivas Reddy')">
+        View Farm
+    </button>
+</div>
+            
+            <!-- Farmer 3 -->
+            <div class="farmer-card">
+                <img src="https://cdn.downtoearth.org.in/library/large/2019-07-24/0.37377100_1563954075_gettyimages-498281885.jpg" alt="Farmer Ahmed" class="farmer-avatar">
+                <h3 class="farmer-name">Ahmed Khan</h3>
+                <p class="farmer-location">
+                    <i class="fas fa-map-marker-alt"></i> Valley Herbs & Spices, AP
+                </p>
+                <p class="farmer-bio">
+                    Expert in growing aromatic herbs and spices using traditional methods passed down for generations.
+                </p>
+                <div class="farmer-products">
+                    <span class="product-tag">Basil</span>
+                    <span class="product-tag">Thyme</span>
+                    <span class="product-tag">Cilantro</span>
+                </div>
+                <button class="view-farm-btn" onclick="viewFarmerProfile('Ahmed Khan')">
+                    View Farm
+                </button>
+            </div>
+            
+            <!-- Farmer 4 -->
+            <div class="farmer-card">
+                <img src="https://static.vecteezy.com/system/resources/previews/036/498/949/original/ai-generated-an-indian-farmer-on-transparent-background-ai-png.png" alt="Farmer David" class="farmer-avatar">
+                <h3 class="farmer-name">David</h3>
+                <p class="farmer-location">
+                    <i class="fas fa-map-marker-alt"></i> Wilson Family Orchards, TS
+                </p>
+                <p class="farmer-bio">
+                    Growing premium stone fruits and citrus using regenerative agriculture practices that improve soil health.
+                </p>
+                <div class="farmer-products">
+                    <span class="product-tag">Peaches</span>
+                    <span class="product-tag">Oranges</span>
+                    <span class="product-tag">Avocados</span>
+                </div>
+                <button class="view-farm-btn" onclick="viewFarmerProfile('David Wilson')">
+                    View Farm
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="section-title">
+            <h2>What Our Customers Say</h2>
+        </div>
+        
+        <div class="testimonials-container">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">
+                    "The quality of produce from FarmerApp is unmatched. I've been a weekly subscriber for a year and my family's health has improved dramatically. The flavors take me back to my childhood!"
+                </p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sarah J." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Sarah Kulskarni</h4>
+                        <p>Weekly Subscriber</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">
+                    "As a restaurant owner, finding consistent, high-quality produce was always a challenge. FarmerApp connects me directly with local farmers who understand my needs. Game changer!"
+                </p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Michael T." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Rama Devi</h4>
+                        <p>Chef & Restaurant Owner</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="testimonial-text">
+                    "The convenience of having farm-fresh produce delivered to my door is amazing. I love knowing exactly which farm my food comes from and that it was harvested just days before."
+                </p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Emily R." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Lakshmi</h4>
+                        <p>Busy Mom of Three</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 4 -->
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">
+                    "I've tried many farm delivery services, but FarmerApp stands out for their commitment to small, sustainable farms. The difference in taste is noticeable, and I feel good supporting local agriculture."
+                </p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Robert L." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Rohith</h4>
+                        <p>Health Enthusiast</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription Section -->
+    <section class="subscription-section" id="subscriptions">
+        <div class="section-title">
+            <h2>Subscription Plans</h2>
+        </div>
+        
+        <p style="max-width: 700px; margin: 0 auto 40px; color: var(--text-muted);">
+            Choose the plan that fits your lifestyle and enjoy fresh, seasonal produce delivered regularly. 
+            Skip or cancel anytime.
+        </p>
+
+        <div class="subscription-plans">
+            <!-- Weekly Plan -->
+            <div class="subscription-plan">
+                <h3 class="plan-name">Weekly Essentials</h3>
+                <div class="plan-price">$15<span>/week</span></div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Fresh seasonal produce box delivered weekly</li>
+                    <li><i class="fas fa-check"></i> 6-8 different fruits & vegetables</li>
+                    <li><i class="fas fa-check"></i> Free surprise seasonal item</li>
+                    <li><i class="fas fa-check"></i> Skip or cancel anytime</li>
+                    <li><i class="fas fa-check"></i> Free delivery</li>
+                </ul>
+                <button class="subscribe-button" onclick="addToCart('Weekly Subscription', 15, '', 'week')">
+                    <i class="fas fa-shopping-basket"></i> Subscribe Now
+                </button>
+            </div>
+            
+            <!-- Monthly Plan -->
+            <div class="subscription-plan popular">
+                <h3 class="plan-name">Family Box</h3>
+                <div class="plan-price">$50<span>/month</span></div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 4 large produce boxes per month</li>
+                    <li><i class="fas fa-check"></i> 8-10 different fruits & vegetables</li>
+                    <li><i class="fas fa-check"></i> Free organic item included</li>
+                    <li><i class="fas fa-check"></i> 10% discount on additional items</li>
+                    <li><i class="fas fa-check"></i> Free delivery</li>
+                    <li><i class="fas fa-check"></i> Customizable preferences</li>
+                </ul>
+                <button class="subscribe-button" onclick="addToCart('Monthly Subscription', 50, '', 'month')">
+                    <i class="fas fa-shopping-basket"></i> Subscribe Now
+                </button>
+            </div>
+            
+            <!-- Annual Plan -->
+            <div class="subscription-plan">
+                <h3 class="plan-name">Year-Round Harvest</h3>
+                <div class="plan-price">$500<span>/year</span></div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 52 weekly produce boxes</li>
+                    <li><i class="fas fa-check"></i> Seasonal fruits & vegetables</li>
+                    <li><i class="fas fa-check"></i> Exclusive seasonal gift packs</li>
+                    <li><i class="fas fa-check"></i> 15% discount on all additional items</li>
+                    <li><i class="fas fa-check"></i> Free delivery all year</li>
+                    <li><i class="fas fa-check"></i> Priority customer support</li>
+                    <li><i class="fas fa-check"></i> Farm tour invitation</li>
+                </ul>
+                <button class="subscribe-button" onclick="addToCart('Annual Subscription', 500, '', 'year')">
+                    <i class="fas fa-shopping-basket"></i> Subscribe Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="newsletter-content">
+            <h3 class="newsletter-title">Join Our Community</h3>
+            <p class="newsletter-text">
+                Sign up for our newsletter to receive seasonal recipes, farming stories, and exclusive offers.
+            </p>
+            <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                <button type="submit" class="newsletter-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>FarmerApp</h4>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                    Connecting you directly with local farmers for the freshest, most sustainable produce.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#products"><i class="fas fa-chevron-right"></i> Products</a></li>
+                    <li><a href="#farmers"><i class="fas fa-chevron-right"></i> Our Farmers</a></li>
+                    <li><a href="#subscriptions"><i class="fas fa-chevron-right"></i> Subscriptions</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Shipping Policy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Returns & Refunds</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact Info</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Farm Road, Agritown, CA 90210</a></li>
+                    <li><a href="tel:+18005551234"><i class="fas fa-phone"></i> (800) 555-1234</a></li>
+                    <li><a href="mailto:hello@farmerapp.com"><i class="fas fa-envelope"></i> hello@farmerapp.com</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> Mon-Fri: 9AM-5PM</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 FarmerApp. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--error-color);"></i> for fresh food lovers</p>
+        </div>
+    </footer>
+
+    <!-- Cart System -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    
+    <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <div class="cart-page" id="cartPage">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="cart-close" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-basket"></i>
+                <h4>Your cart is empty</h4>
+                <p>Start adding some fresh produce!</p>
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-subtotal">
+                <span>Subtotal:</span>
+                <span id="cartSubtotal">$0.00</span>
+            </div>
+            <a href="checkoutpage.html">
+            <button class="cart-checkout" onclick="proceedToCheckout()">
+                <i class="fas fa-credit-card"></i> Proceed to Checkout
+            </button>
+        </a>
+            
+            <button class="cart-track" onclick="continueShopping()">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- Chatbot System -->
+    <button class="chatbot-open" onclick="toggleChatbot()">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <span><i class="fas fa-leaf"></i> Farm Assistant</span>
+            <button class="chatbot-toggle" onclick="toggleChatbot()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                Hello there! I'm your Farm Assistant. How can I help you today? Here are some things you can ask:
+            </div>
+            <div class="message bot-message">
+                • "What fruits are in season?"<br>
+                • "Tell me about your subscription plans"<br>
+                • "How do I track my order?"<br>
+                • "What payment methods do you accept?"
+            </div>
+        </div>
+        
+        <div class="chatbot-suggestions" id="chatbotSuggestions">
+            <button class="suggestion-chip" onclick="sendSuggestion('What fruits are in season?')">Seasonal fruits</button>
+            <button class="suggestion-chip" onclick="sendSuggestion('How does delivery work?')">Delivery info</button>
+            <button class="suggestion-chip" onclick="sendSuggestion('Tell me about subscriptions')">Subscriptions</button>
+        </div>
+        
+        <div class="chatbot-input-area">
+            <input type="text" id="chatbotInput" placeholder="Ask me about our products...">
+            <button onclick="sendChatbotMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Global Variables
+        let cart = [];
+        let wishlist = [];
+        
+        // DOM Elements
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const mainNav = document.getElementById('mainNav');
+        const cartPage = document.getElementById('cartPage');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartItems = document.getElementById('cartItems');
+        const cartFooter = document.getElementById('cartFooter');
+        const cartCount = document.getElementById('cart-count');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load cart from localStorage if available
+            const savedCart = localStorage.getItem('farmerAppCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCart();
+            }
+            
+            // Load wishlist from localStorage if available
+            const savedWishlist = localStorage.getItem('farmerAppWishlist');
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+                // Update wishlist buttons
+                document.querySelectorAll('.wishlist-button').forEach(button => {
+                    const productName = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (wishlist.includes(productName)) {
+                        button.classList.add('active');
+                        button.innerHTML = '<i class="fas fa-heart"></i>';
+                    }
+                });
+            }
+            
+            // Set up scroll event for navbar
+            window.addEventListener('scroll', handleScroll);
+            
+            // Initialize chatbot with welcome message after delay
+            setTimeout(() => {
+                if (chatbotMessages.children.length <= 2) {
+                    addBotMessage("Need help finding fresh produce? Ask me about our fruits, vegetables, or subscription plans!");
+                }
+            }, 3000);
+        });
+        
+        // Navigation Functions
+        function handleScroll() {
+            if (window.scrollY > 50) {
+                mainNav.classList.add('scrolled');
+            } else {
+                mainNav.classList.remove('scrolled');
+            }
+        }
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                window.scrollTo({
+                    top: section.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+        }
+        
+        // Cart Functions
+        function toggleCart() {
+            cartPage.classList.toggle('active');
+            cartOverlay.classList.toggle('active');
+            document.body.style.overflow = cartPage.classList.contains('active') ? 'hidden' : '';
+        }
+        
+        function addToCart(itemName, price, imageUrl, unit = '', quantity = 1) {
+            const existingItem = cart.find(item => item.name === itemName);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ 
+                    name: itemName, 
+                    price: price, 
+                    image: imageUrl,
+                    unit: unit,
+                    quantity: quantity
+                });
+            }
+            
+            updateCart();
+            showNotification(`${quantity} ${unit ? unit + ' of ' : ''}${itemName} added to cart!`);
+            
+            // Save to localStorage
+            localStorage.setItem('farmerAppCart', JSON.stringify(cart));
+            
+            // Show confirmation in chatbot
+            addBotMessage(`Added ${itemName} to your cart! Would you like to know anything else about our products?`);
+        }
+        
+        function removeFromCart(itemName) {
+            cart = cart.filter(item => item.name !== itemName);
+            updateCart();
+            showNotification(`${itemName} removed from cart`);
+            
+            // Save to localStorage
+            localStorage.setItem('farmerAppCart', JSON.stringify(cart));
+        }
+        
+        function updateCartItemQuantity(itemName, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(itemName);
+                return;
+            }
+            
+            const item = cart.find(item => item.name === itemName);
+            if (item) {
+                item.quantity = newQuantity;
+                updateCart();
+                
+                // Save to localStorage
+                localStorage.setItem('farmerAppCart', JSON.stringify(cart));
+            }
+        }
+        
+        function updateCart() {
+            // Update cart count
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update cart items display
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-basket"></i>
+                        <h4>Your cart is empty</h4>
+                        <p>Start adding some fresh produce!</p>
+                    </div>
+                `;
+                cartFooter.style.display = 'none';
+            } else {
+                let subtotal = 0;
+                
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
+                    
+                    const itemElement = document.createElement('div');
+                    itemElement.classList.add('cart-item');
+                    itemElement.innerHTML = `
+                        <img src="${item.image || 'https://via.placeholder.com/80?text=No+Image'}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <h4>${item.name} ${item.unit ? `(${item.unit})` : ''}</h4>
+                            <p>$${item.price.toFixed(2)} each</p>
+                            <div class="cart-item-actions">
+                                <div class="quantity-control">
+                                    <button class="quantity-btn" onclick="updateCartItemQuantity('${item.name}', ${item.quantity - 1})">-</button>
+                                    <span class="quantity">${item.quantity}</span>
+                                    <button class="quantity-btn" onclick="updateCartItemQuantity('${item.name}', ${item.quantity + 1})">+</button>
+                                </div>
+                                <button class="remove-item" onclick="removeFromCart('${item.name}')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    cartItems.appendChild(itemElement);
+                });
+                
+                cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+                cartFooter.style.display = 'block';
+            }
+        }
+        
+        function proceedToCheckout() {
+            if (cart.length > 0) {
+                // In a real app, this would redirect to checkout
+                showNotification('Proceeding to checkout...');
+                toggleCart();
+                setTimeout(() => {
+                    window.location.href = 'checkoutpage.html';
+                }, 500);
+            }
+        }
+        
+        function continueShopping() {
+            toggleCart();
+            scrollToSection('products');
+        }
+        
+        // Wishlist Functions
+        function toggleWishlist(button, itemName) {
+            const index = wishlist.indexOf(itemName);
+            
+            if (index === -1) {
+                // Add to wishlist
+                wishlist.push(itemName);
+                button.classList.add('active');
+                button.innerHTML = '<i class="fas fa-heart"></i>';
+                showNotification(`${itemName} added to wishlist`);
+            } else {
+                // Remove from wishlist
+                wishlist.splice(index, 1);
+                button.classList.remove('active');
+                button.innerHTML = '<i class="far fa-heart"></i>';
+                showNotification(`${itemName} removed from wishlist`);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('farmerAppWishlist', JSON.stringify(wishlist));
+        }
+        
+        // Notification Function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Chatbot Functions
+        function toggleChatbot() {
+            chatbotContainer.classList.toggle('active');
+        }
+        
+        function sendChatbotMessage() {
+            const message = chatbotInput.value.trim();
+            
+            if (message === '') return;
+            
+            addUserMessage(message);
+            chatbotInput.value = '';
+            
+            setTimeout(() => {
+                processUserMessage(message);
+            }, 500);
+        }
+        
+        function sendSuggestion(message) {
+            addUserMessage(message);
+            
+            setTimeout(() => {
+                processUserMessage(message);
+            }, 500);
+        }
+        
+        function addUserMessage(text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user-message');
+            messageElement.textContent = text;
+            chatbotMessages.appendChild(messageElement);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function addBotMessage(text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot-message');
+            messageElement.innerHTML = text;
+            chatbotMessages.appendChild(messageElement);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function processUserMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Greetings
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                addBotMessage("Hello there! How can I assist you with our farm products today?");
+                return;
+            }
+            
+            // Products
+            if (lowerMessage.includes('product') || lowerMessage.includes('item') || lowerMessage.includes('offer')) {
+                addBotMessage("We offer fresh fruits, vegetables, dairy products, and herbs. You can browse them in our product sections. Is there anything specific you're looking for?");
+                return;
+            }
+            
+            // Fruits
+            if (lowerMessage.includes('fruit') || lowerMessage.includes('apple') || lowerMessage.includes('banana') || 
+                lowerMessage.includes('orange') || lowerMessage.includes('mango') || lowerMessage.includes('grape') || 
+                lowerMessage.includes('strawberr') || lowerMessage.includes('avocado') || lowerMessage.includes('peach') ||
+                lowerMessage.includes('pineapple') || lowerMessage.includes('blueberr')) {
+                addBotMessage("We have a variety of fresh fruits including apples, bananas, oranges, mangoes, grapes, strawberries, avocados, peaches, pineapples, and blueberries. All our fruits are locally sourced and organic. Would you like to know about any specific fruit?");
+                return;
+            }
+            
+            // Vegetables
+            if (lowerMessage.includes('vegetable') || lowerMessage.includes('carrot') || lowerMessage.includes('lettuce') || 
+                lowerMessage.includes('tomato') || lowerMessage.includes('potato') || lowerMessage.includes('avocado') ||
+                lowerMessage.includes('pepper') || lowerMessage.includes('cucumber') || lowerMessage.includes('broccoli')) {
+                addBotMessage("Our vegetable selection includes fresh carrots, lettuce, tomatoes, avocados, bell peppers, cucumbers, broccoli, and more. All grown without harmful pesticides. Which vegetable are you interested in?");
+                return;
+            }
+            
+            // Dairy
+            if (lowerMessage.includes('dairy') || lowerMessage.includes('milk') || lowerMessage.includes('cheese') || 
+                lowerMessage.includes('yogurt') || lowerMessage.includes('egg') || lowerMessage.includes('butter') ||
+                lowerMessage.includes('cream')) {
+                addBotMessage("We offer fresh dairy products including milk, cheese, yogurt, eggs, butter, and cream from pasture-raised animals. All our dairy is organic and hormone-free. Need details about any specific dairy product?");
+                return;
+            }
+            
+            // Herbs
+            if (lowerMessage.includes('herb') || lowerMessage.includes('basil') || lowerMessage.includes('thyme') || 
+                lowerMessage.includes('spice') || lowerMessage.includes('rosemary') || lowerMessage.includes('cilantro')) {
+                addBotMessage("Our herb selection includes fresh basil, thyme, rosemary, cilantro and other aromatic herbs. Perfect for enhancing your dishes. Would you like cooking suggestions?");
+                return;
+            }
+            
+            // Seasonal
+            if (lowerMessage.includes('season') || lowerMessage.includes('available now') || lowerMessage.includes('in season')) {
+                addBotMessage("Our current seasonal items include:<br><br>" +
+                              "• <strong>Spring</strong>: Strawberries, asparagus, peas, leafy greens<br>" +
+                              "• <strong>Summer</strong>: Tomatoes, corn, peaches, berries, cucumbers<br>" +
+                              "• <strong>Fall</strong>: Apples, pumpkins, squash, root vegetables<br>" +
+                              "• <strong>Winter</strong>: Citrus, kale, potatoes, onions");
+                return;
+            }
+            
+            // Organic
+            if (lowerMessage.includes('organic') || lowerMessage.includes('natural') || lowerMessage.includes('pesticide')) {
+                addBotMessage("All our products are certified organic, grown without synthetic pesticides or fertilizers. We follow sustainable farming practices to bring you the healthiest options. Many of our farmers also use regenerative agriculture techniques.");
+                return;
+            }
+            
+            // Delivery
+            if (lowerMessage.includes('deliver') || lowerMessage.includes('ship') || lowerMessage.includes('receive') || 
+                lowerMessage.includes('shipping')) {
+                addBotMessage("We offer delivery within 24 hours for local orders. Delivery fee is $5 or free for orders over $50. You can also pick up at our farm. Our delivery days are Tuesday through Saturday.");
+                return;
+            }
+            
+            // Subscription
+            if (lowerMessage.includes('subscription') || lowerMessage.includes('regular') || lowerMessage.includes('plan') ||
+                lowerMessage.includes('membership')) {
+                addBotMessage("We offer weekly, monthly, and annual subscription plans that deliver fresh produce to your door regularly. Subscribers get discounts and exclusive items. Check out our subscription section for details! Would you like me to explain any specific plan?");
+                return;
+            }
+            
+            // Payment
+            if (lowerMessage.includes('pay') || lowerMessage.includes('credit card') || lowerMessage.includes('payment') ||
+                lowerMessage.includes('checkout')) {
+                addBotMessage("We accept all major credit cards, PayPal, and Apple Pay. For subscriptions, you can save your payment method for automatic billing. All transactions are securely processed.");
+                return;
+            }
+            
+            // Farmers
+            if (lowerMessage.includes('farmer') || lowerMessage.includes('grow') || lowerMessage.includes('source') ||
+                lowerMessage.includes('local')) {
+                addBotMessage("We partner with local family farms that practice sustainable agriculture. You can meet our farmers in the 'Meet Our Farmers' section. Each farm profile shows their practices and products.");
+                return;
+            }
+            
+            // Cart
+            if (lowerMessage.includes('cart') || lowerMessage.includes('order') || lowerMessage.includes('buy') || 
+                lowerMessage.includes('checkout') || lowerMessage.includes('purchase')) {
+                if (cart.length > 0) {
+                    const itemList = cart.map(item => `${item.name} (${item.quantity})`).join(', ');
+                    addBotMessage(`You have ${cart.length} items in your cart: ${itemList}. The total is $${calculateCartTotal().toFixed(2)}. You can view your cart by clicking the shopping bag icon. Ready to checkout?`);
+                } else {
+                    addBotMessage("Your cart is currently empty. Browse our products and click 'Add to Cart' when you find something you like!");
+                }
+                return;
+            }
+            
+            // Default response
+            const defaultResponses = [
+                "I'm not sure I understand. Could you ask about our products, delivery, or subscriptions?",
+                "I'm here to help with information about our farm products. What would you like to know?",
+                "Sorry, I didn't get that. Try asking about our fruits, vegetables, or delivery options."
+            ];
+            const randomResponse = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+            addBotMessage(randomResponse);
+        }
+        
+        function calculateCartTotal() {
+            return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        }
+        
+        // Handle Enter key in chatbot input
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatbotMessage();
+            }
+        });
+        
+        // Search function
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                // In a real app, this would search your product database
+                addBotMessage(`I found these products related to "${query}": mangoes, apples, and carrots. Would you like details about any of these?`);
+            } else {
+                addBotMessage("Please enter what you're looking for in the search box.");
+            }
+        }
+        
+        // Farmer Profile View
+        function viewFarmerProfile(farmerName) {
+            showNotification(`Loading ${farmerName}'s profile...`);
+            // In a real app, this would open the farmer's profile page
+        }
+        
+        // Newsletter Subscription
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            const emailInput = event.target.querySelector('.newsletter-input');
+            const email = emailInput.value.trim();
+            
+            if (email) {
+                showNotification(`Thank you for subscribing with ${email}! You'll hear from us soon.`);
+                emailInput.value = '';
+                
+                // In a real app, you would send this to your backend
+                console.log('New newsletter subscriber:', email);
+            }
+        }
+
+       
+    </script>
+    <script type="text/javascript">
+        function googleTranslateElementInit(){
+            new google.translate.TranslateElement(
+                {pageLanguage : 'en'},'google_translate_element');
+        }
+    </script>
+    <script type ="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

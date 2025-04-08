@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Admin Dashboard - Agri-Connect</title>
+    <style>
+        /* Reset and General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #fefaf6;
+            font-size: 16px; /* Base font size for scalability */
+        }
+
+        /* Hamburger Menu Toggle */
+        .hamburger {
+            display: none; /* Hidden by default on larger screens */
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #ff7b25;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1003;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: clamp(60px, 20vw, 250px);
+            background-color: #ff7b25;
+            color: white;
+            padding: clamp(10px, 2vw, 20px);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar h2 {
+            margin-bottom: clamp(20px, 3vw, 30px);
+            padding-bottom: clamp(5px, 1vw, 10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            white-space: nowrap;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: clamp(8px, 1.5vw, 12px) clamp(10px, 2vw, 15px);
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar li i {
+            margin-right: clamp(5px, 1vw, 10px);
+            width: 20px;
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+        }
+
+        .sidebar li span {
+            flex-grow: 1;
+        }
+
+        .active-section {
+            background-color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            transform: translateX(5px);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: clamp(60px, 20vw, 250px);
+            padding: clamp(10px, 3vw, 30px);
+            width: calc(100% - clamp(60px, 20vw, 250px));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(20px, 3vw, 30px);
+            padding-bottom: clamp(10px, 2vw, 20px);
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            z-index: 10;
+            position: sticky;
+            top: 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #ff7b25;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: clamp(30px, 5vw, 40px);
+            height: clamp(30px, 5vw, 40px);
+            border-radius: 50%;
+            margin-right: clamp(5px, 1vw, 10px);
+            object-fit: cover;
+        }
+
+        .section {
+            background-color: white;
+            padding: clamp(15px, 2.5vw, 25px);
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: clamp(20px, 3vw, 30px);
+            transition: transform 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            margin-bottom: clamp(10px, 2vw, 15px);
+            color: #ff7b25;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2 i {
+            margin-right: clamp(5px, 1vw, 10px);
+        }
+
+        .section p {
+            margin-bottom: clamp(15px, 2vw, 20px);
+            color: #777;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: clamp(15px, 2vw, 20px);
+            overflow-x: auto;
+            display: block;
+        }
+
+        th, td {
+            padding: clamp(8px, 1.5vw, 12px) clamp(10px, 2vw, 15px);
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        th {
+            background-color: #fff8f2;
+            color: #ff7b25;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #fff8f2;
+        }
+
+        /* Button Styles */
+        button {
+            padding: clamp(6px, 1vw, 8px) clamp(10px, 2vw, 15px);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        button i {
+            margin-right: clamp(3px, 0.5vw, 5px);
+        }
+
+        .btn-primary {
+            background-color: #ff7b25;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #e66a1a;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e63c3c;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #3e8e41;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Status Styles */
+        .status-pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .status-processing {
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .status-shipped {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        /* Search Bar Styles */
+        .search-bar {
+            margin-bottom: clamp(15px, 2vw, 20px);
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-bar input,
+        .search-bar select {
+            padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: clamp(0.8rem, 2vw, 0.875rem);
+            transition: all 0.3s;
+            flex-grow: 1;
+            min-width: clamp(120px, 30vw, 150px);
+        }
+
+        .search-bar input:focus,
+        .search-bar select:focus {
+            border-color: #ff7b25;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 123, 37, 0.2);
+        }
+
+        .search-bar button {
+            flex-grow: 0;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: clamp(15px, 2vw, 20px);
+            align-items: center;
+            gap: clamp(5px, 1vw, 10px);
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            margin: 5px;
+            padding: clamp(6px, 1vw, 8px) clamp(10px, 2vw, 15px);
+            min-width: clamp(40px, 10vw, 80px);
+        }
+
+        .page-info {
+            padding: 0 clamp(10px, 2vw, 15px);
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        /* Report Controls Styles */
+        .report-controls {
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+            margin-bottom: clamp(15px, 2vw, 20px);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .report-controls select,
+        .report-controls button {
+            flex-grow: 1;
+            min-width: clamp(120px, 30vw, 150px);
+        }
+
+        /* Report Results Styles */
+        .report-results {
+            background-color: #fff8f2;
+            padding: clamp(15px, 2vw, 20px);
+            border-radius: 8px;
+            margin-top: clamp(15px, 2vw, 20px);
+            overflow-x: auto;
+        }
+
+        .report-results h3 {
+            color: #ff7b25;
+            margin-bottom: clamp(10px, 2vw, 15px);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+
+        .report-results table {
+            margin-top: clamp(10px, 2vw, 15px);
+        }
+
+        /* Report Chart Styles */
+        .report-chart {
+            background-color: white;
+            padding: clamp(15px, 2vw, 20px);
+            border-radius: 8px;
+            margin: clamp(15px, 2vw, 20px) 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            color: #777;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            overflow-x: auto;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: clamp(15px, 3vw, 30px);
+            border-radius: 8px;
+            width: 90%;
+            max-width: clamp(300px, 80vw, 500px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(15px, 2vw, 20px);
+            padding-bottom: clamp(5px, 1vw, 10px);
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h3 {
+            color: #ff7b25;
+            font-size: clamp(1rem, 3vw, 1.3rem);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            cursor: pointer;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: clamp(3px, 0.5vw, 5px);
+            color: #555;
+            font-weight: 500;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: clamp(0.8rem, 2vw, 0.875rem);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff7b25;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 123, 37, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: clamp(5px, 1vw, 10px);
+            margin-top: clamp(15px, 2vw, 20px);
+            flex-wrap: wrap;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: clamp(10px, 2vh, 20px);
+            right: clamp(10px, 2vw, 20px);
+            padding: clamp(10px, 1.5vw, 15px) clamp(15px, 2vw, 20px);
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+            max-width: 90%;
+        }
+
+        .notification.error {
+            background-color: #f44336;
+        }
+
+        .notification i {
+            margin-right: clamp(5px, 1vw, 10px);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
+        /* Stats Container Styles */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 30vw, 250px), 1fr));
+            gap: clamp(15px, 2vw, 20px);
+            margin-bottom: clamp(20px, 3vw, 30px);
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: clamp(15px, 2vw, 20px);
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: #777;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            margin-bottom: clamp(5px, 1vw, 10px);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-card h3 i {
+            margin-right: clamp(5px, 1vw, 10px);
+            color: #ff7b25;
+        }
+
+        .stat-card .value {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: bold;
+            color: #ff7b25;
+        }
+
+        .stat-card .change {
+            margin-top: clamp(3px, 0.5vw, 5px);
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            display: flex;
+            align-items: center;
+        }
+
+        .change.positive {
+            color: #4CAF50;
+        }
+
+        .change.negative {
+            color: #f44336;
+        }
+
+        /* Responsive Design with Granular Breakpoints */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: clamp(60px, 18vw, 200px);
+            }
+
+            .main-content {
+                margin-left: clamp(60px, 18vw, 200px);
+                width: calc(100% - clamp(60px, 18vw, 200px));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: clamp(60px, 15vw, 150px);
+            }
+
+            .main-content {
+                margin-left: clamp(60px, 15vw, 150px);
+                width: calc(100% - clamp(60px, 15vw, 150px));
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar input,
+            .search-bar select {
+                min-width: 100%;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .pagination {
+                flex-direction: column;
+            }
+
+            .report-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .report-controls select,
+            .report-controls button {
+                min-width: 100%;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                padding: clamp(8px, 2vw, 15px);
+            }
+
+            .section {
+                padding: clamp(10px, 2vw, 15px);
+            }
+
+            .modal-content {
+                padding: clamp(10px, 2vw, 20px);
+            }
+
+            .notification {
+                padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+                font-size: clamp(0.7rem, 2vw, 0.875rem);
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 180px;
+            }
+
+            table {
+                white-space: nowrap;
+            }
+
+            th, td {
+                padding: clamp(6px, 1vw, 8px) clamp(8px, 1.5vw, 10px);
+            }
+        }
+
+        /* Large Screens */
+        @media (min-width: 1920px) {
+            body {
+                font-size: 18px;
+            }
+
+            .sidebar {
+                width: 300px;
+            }
+
+            .main-content {
+                margin-left: 300px;
+                width: calc(100% - 300px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="hamburger" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="google_translate_element"></div>
+    <div class="sidebar">
+        <h2>Agri-Connect</h2>
+        <ul>
+            <li class="active-section" onclick="showSection('dashboard', event)">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </li>
+            <li onclick="showSection('orders', event)">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Order Tracking</span>
+            </li>
+            <li onclick="showSection('users', event)">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </li>
+            <li onclick="showSection('reports', event)">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </li>
+            <li onclick="showSection('products', event)">
+                <i class="fas fa-leaf"></i>
+                <span>Product Management</span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1 id="sectionTitle">Dashboard</h1>
+            <div class="user-info">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Admin">
+                <span>Admin User</span>
+            </div>
+        </div>
+        
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3><i class="fas fa-shopping-cart"></i> Total Orders</h3>
+                    <div class="value">128</div>
+                    <div class="change positive">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-users"></i> Total Users</h3>
+                    <div class="value">342</div>
+                    <div class="change positive">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-dollar-sign"></i> Total Revenue</h3>
+                    <div class="value">$8,245</div>
+                    <div class="change positive">
+                        <i class="fas fa-arrow-up"></i> 15% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-leaf"></i> Products</h3>
+                    <div class="value">56</div>
+                    <div class="change positive">
+                        <i class="fas fa-arrow-up"></i> 5 new this month
+                    </div>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-chart-line"></i> Recent Activity</h2>
+            <p>Overview of recent activities and performance metrics.</p>
+            <div class="report-chart">
+                <p>Activity chart would be displayed here with real data</p>
+            </div>
+        </section>
+        
+        <!-- Order Tracking Section -->
+        <section id="orders" class="section hidden">
+            <h2><i class="fas fa-shopping-cart"></i> Order Tracking</h2>
+            <p>View and update order statuses.</p>
+            <div class="search-bar">
+                <input type="text" id="orderSearch" placeholder="Search orders..." oninput="searchOrders()">
+                <select id="orderFilter" onchange="filterOrdersByStatus()">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Orders will be populated by JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button onclick="changeOrderPage(-1)"><i class="fas fa-chevron-left"></i> Previous</button>
+                <span id="orderPageInfo" class="page-info"></span>
+                <button onclick="changeOrderPage(1)">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+        
+        <!-- User Management Section -->
+        <section id="users" class="section hidden">
+            <h2><i class="fas fa-users"></i> User Management</h2>
+            <p>Manage registered users and farmers.</p>
+            <div class="search-bar">
+                <input type="text" id="userSearch" placeholder="Search users..." oninput="searchUsers()">
+                <select id="userFilter" onchange="filterUsersByRole()">
+                    <option value="all">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="farmer">Farmer</option>
+                    <option value="consumer">Consumer</option>
+                </select>
+                <button class="btn-primary" onclick="showAddUserModal()"><i class="fas fa-plus"></i> Add User</button>
+            </div>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Registered</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Users will be populated by JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button onclick="changeUserPage(-1)"><i class="fas fa-chevron-left"></i> Previous</button>
+                <span id="userPageInfo" class="page-info"></span>
+                <button onclick="changeUserPage(1)">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+        
+        <!-- Reports Section -->
+        <section id="reports" class="section hidden">
+            <h2><i class="fas fa-chart-bar"></i> Reports</h2>
+            <p>View sales and user reports.</p>
+            <div class="report-controls">
+                <select id="reportType">
+                    <option value="sales">Sales Report</option>
+                    <option value="users">User Growth</option>
+                    <option value="products">Product Performance</option>
+                </select>
+                <select id="reportPeriod">
+                    <option value="week">Last Week</option>
+                    <option value="month">Last Month</option>
+                    <option value="quarter">Last Quarter</option>
+                    <option value="year">Last Year</option>
+                </select>
+                <button class="btn-primary" onclick="generateReport()"><i class="fas fa-chart-pie"></i> Generate Report</button>
+                <button class="btn-success" onclick="exportReport()"><i class="fas fa-file-export"></i> Export as CSV</button>
+            </div>
+            <div id="reportResults" class="report-results">
+                <!-- Report results will be displayed here -->
+                <p>Select report type and period, then click "Generate Report"</p>
+            </div>
+        </section>
+        
+        <!-- Product Management Section -->
+        <section id="products" class="section hidden">
+            <h2><i class="fas fa-leaf"></i> Product Management</h2>
+            <p>Manage available products and inventory.</p>
+            <div class="search-bar">
+                <input type="text" id="productSearch" placeholder="Search products..." oninput="searchProducts()">
+                <select id="productFilter" onchange="filterProductsByCategory()">
+                    <option value="all">All Categories</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Pantry">Pantry</option>
+                </select>
+                <button class="btn-primary" onclick="showAddProductModal()"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
+            <table id="productsTable">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Farmer</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- Products will be populated by JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button onclick="changeProductPage(-1)"><i class="fas fa-chevron-left"></i> Previous</button>
+                <span id="productPageInfo" class="page-info"></span>
+                <button onclick="changeProductPage(1)">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Add New Product</h3>
+                <button class="close-modal" onclick="closeModal('productModal')">×</button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Pantry">Pantry</option>
+                        <option value="Meat">Meat</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price ($)</label>
+                    <input type="number" id="productPrice" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stock Quantity</label>
+                    <input type="number" id="productStock" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="productFarmer">Farmer</label>
+                    <select id="productFarmer" required>
+                        <option value="">Select Farmer</option>
+                        <!-- Farmers will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productStatus">Status</label>
+                    <select id="productStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="out_of_stock">Out of Stock</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="userModalTitle">Add New User</h3>
+                <button class="close-modal" onclick="closeModal('userModal')">×</button>
+            </div>
+            <form id="userForm" onsubmit="saveUser(event)">
+                <input type="hidden" id="userId">
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole" required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="consumer">Consumer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status</label>
+                    <select id="userStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage">Operation completed successfully!</span>
+    </div>
+
+    <script>
+        // Predefined data
+        const predefinedData = {
+    orders: [
+        { id: '#1023', customer: 'Srinivas Reddy', products: 'Organic Tomatoes (5kg), Fresh Lettuce (2kg)', total: 45.99, date: '2025-04-15', status: 'processing' },
+        { id: '#1024', customer: 'Lakshmi Naidu', products: 'Farm Eggs (12), Honey (500g)', total: 28.50, date: '2025-04-14', status: 'pending' },
+        { id: '#1025', customer: 'Ramesh Goud', products: 'Organic Carrots (3kg), Potatoes (5kg)', total: 22.75, date: '2025-04-13', status: 'shipped' },
+        { id: '#1026', customer: 'Anitha Rao', products: 'Strawberries (1kg), Blueberries (500g)', total: 18.25, date: '2025-04-12', status: 'cancelled' },
+        { id: '#1027', customer: 'Venkat Yadav', products: 'Whole Chicken, Fresh Milk (1L)', total: 32.40, date: '2025-04-11', status: 'processing' },
+        { id: '#1028', customer: 'Swapna Chary', products: 'Organic Apples (2kg), Pears (1kg)', total: 15.80, date: '2025-04-10', status: 'shipped' },
+        { id: '#1029', customer: 'Kiran Kumar', products: 'Cheese (500g), Butter (250g)', total: 24.90, date: '2025-04-09', status: 'pending' },
+        { id: '#1030', customer: 'Sravani Mudiraj', products: 'Spinach (500g), Kale (500g)', total: 12.50, date: '2025-04-08', status: 'processing' },
+        { id: '#1031', customer: 'Prasad Raju', products: 'Organic Beef (1kg)', total: 38.75, date: '2025-04-07', status: 'shipped' },
+        { id: '#1032', customer: 'Divya Sree', products: 'Organic Chicken (1kg)', total: 28.50, date: '2025-04-06', status: 'shipped' },
+        { id: '#1033', customer: 'Mahesh Konda', products: 'Fresh Fish (1kg)', total: 42.30, date: '2025-04-05', status: 'processing' },
+        { id: '#1034', customer: 'Jyothi Bai', products: 'Organic Potatoes (3kg)', total: 12.75, date: '2025-04-04', status: 'pending' }
+    ],
+    users: [
+        { id: '#2001', name: 'Narender Netha', email: 'alice@example.com', role: 'farmer', registered: '2025-01-15', status: 'active' },
+        { id: '#2002', name: 'Saritha Palli', email: 'bob@example.com', role: 'consumer', registered: '2025-02-20', status: 'active' },
+        { id: '#2003', name: 'Raghav Ender', email: 'charlie@example.com', role: 'admin', registered: '2025-01-05', status: 'active' },
+        { id: '#2004', name: 'Bhaskar Vel', email: 'diana@example.com', role: 'farmer', registered: '2025-03-10', status: 'active' },
+        { id: '#2005', name: 'Padma Sri', email: 'eve@example.com', role: 'consumer', registered: '2025-03-25', status: 'active' },
+        { id: '#2006', name: 'Suresh Gutta', email: 'frank@example.com', role: 'farmer', registered: '2025-02-15', status: 'inactive' },
+        { id: '#2007', name: 'Haritha Meda', email: 'grace@example.com', role: 'consumer', registered: '2025-04-01', status: 'active' },
+        { id: '#2008', name: 'Chandra Shekar', email: 'henry@example.com', role: 'farmer', registered: '2025-03-05', status: 'suspended' },
+        { id: '#2009', name: 'Teja Varma', email: 'ivy@example.com', role: 'consumer', registered: '2025-03-18', status: 'active' },
+        { id: '#2010', name: 'Gopi Mudiraj', email: 'jack@example.com', role: 'farmer', registered: '2025-02-28', status: 'active' }
+    ],
+    products: [
+        { id: '#3001', name: 'Organic Tomatoes', category: 'Vegetables', price: 4.99, stock: 50, farmer: 'Narender Netha', status: 'active', description: 'Fresh organic tomatoes grown without pesticides' },
+        { id: '#3002', name: 'Fresh Lettuce', category: 'Vegetables', price: 2.50, stock: 30, farmer: 'Narender Netha', status: 'active', description: 'Crisp and fresh lettuce for salads' },
+        { id: '#3003', name: 'Farm Eggs', category: 'Dairy', price: 3.99, stock: 100, farmer: 'Bhaskar Vel', status: 'active', description: 'Free-range eggs from happy chickens' },
+        { id: '#3004', name: 'Organic Honey', category: 'Pantry', price: 8.50, stock: 25, farmer: 'Suresh Gutta', status: 'active', description: 'Pure organic honey from local bees' },
+        { id: '#3005', name: 'Organic Carrots', category: 'Vegetables', price: 3.25, stock: 60, farmer: 'Chandra Shekar', status: 'active', description: 'Sweet and crunchy organic carrots' },
+        { id: '#3006', name: 'Fresh Milk', category: 'Dairy', price: 2.99, stock: 40, farmer: 'Bhaskar Vel', status: 'active', description: 'Fresh whole milk from grass-fed cows' },
+        { id: '#3007', name: 'Strawberries', category: 'Fruits', price: 5.50, stock: 20, farmer: 'Suresh Gutta', status: 'active', description: 'Juicy organic strawberries' },
+        { id: '#3008', name: 'Organic Potatoes', category: 'Vegetables', price: 2.75, stock: 80, farmer: 'Chandra Shekar', status: 'active', description: 'Organic potatoes perfect for roasting' },
+        { id: '#3009', name: 'Blueberries', category: 'Fruits', price: 6.25, stock: 15, farmer: 'Gopi Mudiraj', status: 'out_of_stock', description: 'Sweet organic blueberries' },
+        { id: '#3010', name: 'Organic Beef', category: 'Meat', price: 12.99, stock: 25, farmer: 'Narender Netha', status: 'active', description: 'Grass-fed organic beef' },
+        { id: '#3011', name: 'Organic Chicken', category: 'Meat', price: 9.50, stock: 30, farmer: 'Bhaskar Vel', status: 'active', description: 'Free-range organic chicken' },
+        { id: '#3012', name: 'Organic Apples', category: 'Fruits', price: 3.75, stock: 45, farmer: 'Suresh Gutta', status: 'inactive', description: 'Crisp organic apples' }
+    ],
+    reports: {
+        sales: {
+            week: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], data: [1200, 1900, 1500, 2100, 1800, 2500, 2200] },
+            month: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], data: [8500, 9200, 8800, 9500] },
+            quarter: { labels: ['Month 1', 'Month 2', 'Month 3'], data: [35000, 38000, 42000] },
+            year: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], data: [115000, 135000, 125000, 145000] }
+        },
+        users: {
+            week: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], data: [15, 22, 18, 25, 20, 30, 28] },
+            month: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], data: [80, 95, 110, 125] },
+            quarter: { labels: ['Month 1', 'Month 2', 'Month 3'], data: [350, 420, 480] },
+            year: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], data: [1200, 1500, 1400, 1600] }
+        },
+        products: {
+            week: { labels: ['Tomatoes', 'Lettuce', 'Eggs', 'Honey', 'Carrots', 'Milk', 'Strawberries', 'Potatoes', 'Blueberries', 'Beef', 'Chicken', 'Apples'], 
+                   data: [45, 30, 60, 25, 40, 35, 28, 50, 18, 22, 30, 15] },
+            month: { labels: ['Tomatoes', 'Lettuce', 'Eggs', 'Honey', 'Carrots', 'Milk', 'Strawberries', 'Potatoes', 'Blueberries', 'Beef', 'Chicken', 'Apples'], 
+                   data: [180, 120, 240, 100, 160, 140, 112, 200, 72, 88, 120, 60] },
+            quarter: { labels: ['Tomatoes', 'Lettuce', 'Eggs', 'Honey', 'Carrots', 'Milk', 'Strawberries', 'Potatoes', 'Blueberries', 'Beef', 'Chicken', 'Apples'], 
+                     data: [540, 360, 720, 300, 480, 420, 336, 600, 216, 264, 360, 180] },
+            year: { labels: ['Tomatoes', 'Lettuce', 'Eggs', 'Honey', 'Carrots', 'Milk', 'Strawberries', 'Potatoes', 'Blueberries', 'Beef', 'Chicken', 'Apples'], 
+                  data: [2160, 1440, 2880, 1200, 1920, 1680, 1344, 2400, 864, 1056, 1440, 720] }
+        }
+    }
+};
+
+        // Pagination variables
+        let currentOrderPage = 1;
+        let currentUserPage = 1;
+        let currentProductPage = 1;
+        const itemsPerPage = 8;
+
+        // Current editing IDs
+        let currentEditingProductId = null;
+        let currentEditingUserId = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrders();
+            renderUsers();
+            renderProducts();
+            populateFarmerDropdown();
+        });
+
+        // Sidebar toggle function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Section navigation
+        function showSection(sectionId, event) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            document.querySelectorAll('.sidebar li').forEach(li => {
+                li.classList.remove('active-section');
+            });
+            event.currentTarget.classList.add('active-section');
+            
+            const sectionTitles = {
+                'dashboard': 'Dashboard',
+                'orders': 'Order Tracking',
+                'users': 'User Management',
+                'reports': 'Reports',
+                'products': 'Product Management'
+            };
+            document.getElementById('sectionTitle').textContent = sectionTitles[sectionId];
+
+            // Close sidebar on mobile after selection
+            if (window.innerWidth <= 768) {
+                document.querySelector('.sidebar').classList.remove('active');
+            }
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'productModal') {
+                document.getElementById('productForm').reset();
+                currentEditingProductId = null;
+            } else if (modalId === 'userModal') {
+                document.getElementById('userForm').reset();
+                currentEditingUserId = null;
+            }
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.className = isError ? 'notification error' : 'notification';
+            document.getElementById('notificationMessage').textContent = message;
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Order Management Functions
+        function renderOrders() {
+            const tableBody = document.getElementById('ordersTableBody');
+            tableBody.innerHTML = '';
+            
+            const filteredOrders = filterOrders();
+            const paginatedOrders = paginateData(filteredOrders, currentOrderPage);
+            
+            if (paginatedOrders.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="7" style="text-align: center;">No orders found</td>`;
+                tableBody.appendChild(row);
+            } else {
+                paginatedOrders.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td>${order.products}</td>
+                        <td>$${order.total.toFixed(2)}</td>
+                        <td>${order.date}</td>
+                        <td class="status-${order.status}">${capitalizeFirstLetter(order.status)}</td>
+                        <td>
+                            ${order.status === 'pending' ? `<button class="btn-primary" onclick="updateOrderStatus('${order.id}', 'processing')"><i class="fas fa-cog"></i> Process</button>` : ''}
+                            ${order.status === 'processing' ? `<button class="btn-success" onclick="updateOrderStatus('${order.id}', 'shipped')"><i class="fas fa-truck"></i> Ship</button>` : ''}
+                            ${order.status !== 'cancelled' ? `<button class="btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')"><i class="fas fa-times"></i> Cancel</button>` : ''}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            updatePaginationInfo('order', filteredOrders.length);
+        }
+
+        function filterOrders() {
+            const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('orderFilter').value;
+            
+            return predefinedData.orders.filter(order => 
+                (order.id.toLowerCase().includes(searchTerm) || 
+                order.customer.toLowerCase().includes(searchTerm) ||
+                order.products.toLowerCase().includes(searchTerm)) && 
+                (statusFilter === 'all' || order.status === statusFilter)
+            );
+        }
+
+        function filterOrdersByStatus() {
+            currentOrderPage = 1;
+            renderOrders();
+        }
+
+        function searchOrders() {
+            currentOrderPage = 1;
+            renderOrders();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = predefinedData.orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                renderOrders();
+                showNotification(`Order ${orderId} status updated to ${newStatus}`);
+            }
+        }
+
+        // User Management Functions
+        function renderUsers() {
+            const tableBody = document.getElementById('usersTableBody');
+            tableBody.innerHTML = '';
+            
+            const filteredUsers = filterUsers();
+            const paginatedUsers = paginateData(filteredUsers, currentUserPage);
+            
+            if (paginatedUsers.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="7" style="text-align: center;">No users found</td>`;
+                tableBody.appendChild(row);
+            } else {
+                paginatedUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${capitalizeFirstLetter(user.role)}</td>
+                        <td>${user.registered}</td>
+                        <td class="status-${user.status}">${capitalizeFirstLetter(user.status.replace('_', ' '))}</td>
+                        <td>
+                            <button class="btn-primary" onclick="editUser('${user.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-danger" onclick="removeUser('${user.id}')"><i class="fas fa-trash"></i> Remove</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            updatePaginationInfo('user', filteredUsers.length);
+        }
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+            const roleFilter = document.getElementById('userFilter').value;
+            
+            return predefinedData.users.filter(user => 
+                (user.id.toLowerCase().includes(searchTerm) || 
+                user.name.toLowerCase().includes(searchTerm) ||
+                user.email.toLowerCase().includes(searchTerm) ||
+                user.role.toLowerCase().includes(searchTerm)) && 
+                (roleFilter === 'all' || user.role === roleFilter)
+            );
+        }
+
+        function filterUsersByRole() {
+            currentUserPage = 1;
+            renderUsers();
+        }
+
+        function searchUsers() {
+            currentUserPage = 1;
+            renderUsers();
+        }
+
+        function showAddUserModal() {
+            document.getElementById('userModalTitle').textContent = 'Add New User';
+            document.getElementById('userId').value = '';
+            document.getElementById('userPassword').required = true;
+            showModal('userModal');
+        }
+
+        function editUser(userId) {
+            const user = predefinedData.users.find(u => u.id === userId);
+            if (user) {
+                currentEditingUserId = userId;
+                document.getElementById('userModalTitle').textContent = 'Edit User';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userName').value = user.name;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userRole').value = user.role;
+                document.getElementById('userStatus').value = user.status;
+                document.getElementById('userPassword').required = false;
+                document.getElementById('userPassword').placeholder = 'Leave blank to keep current';
+                showModal('userModal');
+            }
+        }
+
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const userId = document.getElementById('userId').value;
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const role = document.getElementById('userRole').value;
+            const status = document.getElementById('userStatus').value;
+            const password = document.getElementById('userPassword').value;
+            
+            if (currentEditingUserId) {
+                const user = predefinedData.users.find(u => u.id === currentEditingUserId);
+                if (user) {
+                    user.name = name;
+                    user.email = email;
+                    user.role = role;
+                    user.status = status;
+                    showNotification('User updated successfully');
+                }
+            } else {
+                const newId = `#${Math.floor(Math.random() * 9000 + 1000)}`;
+                predefinedData.users.push({
+                    id: newId,
+                    name,
+                    email,
+                    role,
+                    status,
+                    registered: new Date().toISOString().split('T')[0]
+                });
+                showNotification('User added successfully');
+            }
+            
+            closeModal('userModal');
+            renderUsers();
+        }
+
+        function removeUser(userId) {
+            if (confirm(`Are you sure you want to remove user ${userId}?`)) {
+                predefinedData.users = predefinedData.users.filter(user => user.id !== userId);
+                renderUsers();
+                showNotification(`User ${userId} has been removed`);
+            }
+        }
+
+        // Product Management Functions
+        function renderProducts() {
+            const tableBody = document.getElementById('productsTableBody');
+            tableBody.innerHTML = '';
+            
+            const filteredProducts = filterProducts();
+            const paginatedProducts = paginateData(filteredProducts, currentProductPage);
+            
+            if (paginatedProducts.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="8" style="text-align: center;">No products found</td>`;
+                tableBody.appendChild(row);
+            } else {
+                paginatedProducts.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td>$${product.price.toFixed(2)}</td>
+                        <td>${product.stock}</td>
+                        <td>${product.farmer}</td>
+                        <td class="status-${product.status}">${capitalizeFirstLetter(product.status.replace('_', ' '))}</td>
+                        <td>
+                            <button class="btn-primary" onclick="editProduct('${product.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-danger" onclick="removeProduct('${product.id}')"><i class="fas fa-trash"></i> Remove</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            updatePaginationInfo('product', filteredProducts.length);
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('productFilter').value;
+            
+            return predefinedData.products.filter(product => 
+                (product.id.toLowerCase().includes(searchTerm) || 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm) ||
+                product.farmer.toLowerCase().includes(searchTerm)) && 
+                (categoryFilter === 'all' || product.category === categoryFilter)
+            );
+        }
+
+        function filterProductsByCategory() {
+            currentProductPage = 1;
+            renderProducts();
+        }
+
+        function searchProducts() {
+            currentProductPage = 1;
+            renderProducts();
+        }
+
+        function populateFarmerDropdown() {
+            const select = document.getElementById('productFarmer');
+            select.innerHTML = '<option value="">Select Farmer</option>';
+            
+            const farmers = predefinedData.users.filter(user => user.role === 'farmer');
+            farmers.forEach(farmer => {
+                const option = document.createElement('option');
+                option.value = farmer.name;
+                option.textContent = farmer.name;
+                select.appendChild(option);
+            });
+        }
+
+        function showAddProductModal() {
+            document.getElementById('productModalTitle').textContent = 'Add New Product';
+            document.getElementById('productId').value = '';
+            showModal('productModal');
+        }
+
+        function editProduct(productId) {
+            const product = predefinedData.products.find(p => p.id === productId);
+            if (product) {
+                currentEditingProductId = productId;
+                document.getElementById('productModalTitle').textContent = 'Edit Product';
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productFarmer').value = product.farmer;
+                document.getElementById('productStatus').value = product.status;
+                document.getElementById('productDescription').value = product.description || '';
+                showModal('productModal');
+            }
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const productId = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value;
+            const category = document.getElementById('productCategory').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const farmer = document.getElementById('productFarmer').value;
+            const status = document.getElementById('productStatus').value;
+            const description = document.getElementById('productDescription').value;
+            
+            if (currentEditingProductId) {
+                const product = predefinedData.products.find(p => p.id === currentEditingProductId);
+                if (product) {
+                    product.name = name;
+                    product.category = category;
+                    product.price = price;
+                    product.stock = stock;
+                    product.farmer = farmer;
+                    product.status = status;
+                    product.description = description;
+                    showNotification('Product updated successfully');
+                }
+            } else {
+                const newId = `#${Math.floor(Math.random() * 9000 + 1000)}`;
+                predefinedData.products.push({
+                    id: newId,
+                    name,
+                    category,
+                    price,
+                    stock,
+                    farmer,
+                    status,
+                    description
+                });
+                showNotification('Product added successfully');
+            }
+            
+            closeModal('productModal');
+            renderProducts();
+        }
+
+        function removeProduct(productId) {
+            if (confirm(`Are you sure you want to remove product ${productId}?`)) {
+                predefinedData.products = predefinedData.products.filter(product => product.id !== productId);
+                renderProducts();
+                showNotification(`Product ${productId} has been removed`);
+            }
+        }
+
+        // Report Functions
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const reportPeriod = document.getElementById('reportPeriod').value;
+            
+            const reportData = predefinedData.reports[reportType][reportPeriod];
+            let reportHTML = `<h3>${capitalizeFirstLetter(reportType)} Report (${capitalizeFirstLetter(reportPeriod)})</h3>`;
+            
+            const total = reportData.data.reduce((a, b) => a + b, 0);
+            const average = total / reportData.data.length;
+            const max = Math.max(...reportData.data);
+            const min = Math.min(...reportData.data);
+            
+            reportHTML += `
+                <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 20px;">
+                    <div class="stat-card">
+                        <h3><i class="fas fa-calculator"></i> Total</h3>
+                        <div class="value">${reportType === 'sales' ? '$' : ''}${total.toLocaleString()}${reportType === 'users' ? ' users' : ''}${reportType === 'products' ? ' units' : ''}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-chart-line"></i> Average</h3>
+                        <div class="value">${reportType === 'sales' ? '$' : ''}${average.toLocaleString(undefined, {maximumFractionDigits: 2})}${reportType === 'users' ? ' users' : ''}${reportType === 'products' ? ' units' : ''}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-arrow-up"></i> Maximum</h3>
+                        <div class="value">${reportType === 'sales' ? '$' : ''}${max.toLocaleString()}${reportType === 'users' ? ' users' : ''}${reportType === 'products' ? ' units' : ''}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-arrow-down"></i> Minimum</h3>
+                        <div class="value">${reportType === 'sales' ? '$' : ''}${min.toLocaleString()}${reportType === 'users' ? ' users' : ''}${reportType === 'products' ? ' units' : ''}</div>
+                    </div>
+                </div>
+            `;
+            
+            reportHTML += `
+                <div class="report-chart">
+                    <p>Chart would be displayed here with real data</p>
+                    <p>X-axis: Time Period (${reportData.labels.join(', ')})</p>
+                    <p>Y-axis: ${capitalizeFirstLetter(reportType)} Data</p>
+                </div>
+            `;
+            
+            reportHTML += `
+                <table>
+                    <tr>
+                        <th>Period</th>
+                        <th>Value</th>
+                        <th>Percentage of Total</th>
+                    </tr>
+            `;
+            
+            for (let i = 0; i < reportData.labels.length; i++) {
+                const percentage = ((reportData.data[i] / total) * 100).toFixed(1);
+                reportHTML += `
+                    <tr>
+                        <td>${reportData.labels[i]}</td>
+                        <td>${reportType === 'sales' ? '$' : ''}${reportData.data[i].toLocaleString()}${reportType === 'users' ? ' users' : ''}${reportType === 'products' ? ' units' : ''}</td>
+                        <td>${percentage}%</td>
+                    </tr>
+                `;
+            }
+            
+            reportHTML += `</table>`;
+            
+            document.getElementById('reportResults').innerHTML = reportHTML;
+        }
+
+        function exportReport() {
+            showNotification('Report exported successfully as CSV');
+        }
+
+        // Utility Functions
+        function paginateData(data, currentPage) {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            return data.slice(startIndex, startIndex + itemsPerPage);
+        }
+
+        function updatePaginationInfo(type, totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            document.getElementById(`${type}PageInfo`).textContent = `Page ${window[`current${capitalizeFirstLetter(type)}Page`]} of ${totalPages}`;
+        }
+
+        function changeOrderPage(delta) {
+            const totalPages = Math.ceil(filterOrders().length / itemsPerPage);
+            currentOrderPage = Math.max(1, Math.min(totalPages, currentOrderPage + delta));
+            renderOrders();
+        }
+
+        function changeUserPage(delta) {
+            const totalPages = Math.ceil(filterUsers().length / itemsPerPage);
+            currentUserPage = Math.max(1, Math.min(totalPages, currentUserPage + delta));
+            renderUsers();
+        }
+
+        function changeProductPage(delta) {
+            const totalPages = Math.ceil(filterProducts().length / itemsPerPage);
+            currentProductPage = Math.max(1, Math.min(totalPages, currentProductPage + delta));
+            renderProducts();
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

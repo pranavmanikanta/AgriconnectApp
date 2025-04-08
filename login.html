@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Agri Connect - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9800;
+            z-index: 10;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .login-container {
+            background: rgba(34, 34, 34, 0.85);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 400px;
+            position: relative;
+            z-index: 2;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #ff9800;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid #ff9800;
+        }
+        .login-btn {
+            background: #ff9800;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+        .login-btn:hover {
+            background: #e68900;
+            transform: scale(1.05);
+        }
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .login-option {
+            flex: 1;
+            margin: 0 5px;
+        }
+        .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .register-link a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+            color: #fff;
+            font-size: 14px;
+            z-index: 2;
+        }
+        .login-form {
+            display: none;
+        }
+        .login-form.active {
+            display: block;
+        }
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ff9800;
+            color: #ff9800;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: #ff9800;
+            color: #fff;
+        }
+        .error-message {
+            color: #ff5252;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .success-message {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="google_translate_element"></div>
+    <video class="video-background" autoplay muted loop>
+        <source src="agri.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <header>Agri Connect</header>
+    
+    <div class="login-container">
+        <div class="tab-buttons">
+            <button id="farmerTab" class="tab-btn active" onclick="switchLoginForm('farmer')">Farmer Login</button>
+            <button id="consumerTab" class="tab-btn" onclick="switchLoginForm('consumer')">Consumer Login</button>
+            <button id="adminTab" class="tab-btn" onclick="switchLoginForm('admin')">Admin Login</button>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Farmer Login Form -->
+        <form id="farmerLoginForm" class="login-form active" onsubmit="handleLogin(event, 'farmer')">
+            <h2>Farmer Login</h2>
+            <div class="input-group">
+                <label for="farmerEmail">Email</label>
+                <input type="email" id="farmerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="farmerPassword">Password</label>
+                <input type="password" id="farmerPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div class="register-link">
+                Don't have an account? <a href="#" onclick="showRegisterForm('farmer')">Register as Farmer</a>
+            </div>
+        </form>
+        <!-- Consumer Login Form -->
+        <form id="consumerLoginForm" class="login-form" onsubmit="handleLogin(event, 'consumer')">
+            <h2>Consumer Login</h2>
+            <div class="input-group">
+                <label for="consumerEmail">Email</label>
+                <input type="email" id="consumerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="consumerPassword">Password</label>
+                <input type="password" id="consumerPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div class="register-link">
+                Don't have an account? <a href="#" onclick="showRegisterForm('consumer')">Register as Consumer</a>
+            </div>
+        </form>
+
+        <!-- Admin Login Form -->
+        <form id="adminLoginForm" class="login-form" onsubmit="handleLogin(event, 'admin')">
+            <h2>Admin Login</h2>
+            <div class="input-group">
+                <label for="adminEmail">Email</label>
+                <input type="email" id="adminEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div class="register-link">
+                Don't have an account? <a href="#" onclick="showRegisterForm('admin')">Register as Admin</a>
+            </div>
+        </form>
+
+        <!-- Registration Form (hidden by default) -->
+        <form id="registerForm" class="login-form" onsubmit="handleRegister(event)" style="display: none;">
+            <h2 id="registerTitle">Register</h2>
+            <input type="hidden" id="registerUserType">
+            <div class="input-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Enter your password" required>
+            </div>
+            <div class="input-group">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="login-btn">Register</button>
+            <div class="register-link">
+                Already have an account? <a href="#" onclick="showLoginForm()">Login</a>
+            </div>
+        </form>
+    </div>
+    
+    <footer>&copy; 2025 Farmer's Hub | All Rights Reserved</footer>
+
+    <script>
+        // Initialize users in localStorage if not exists
+        if (!localStorage.getItem('agriConnectUsers')) {
+            const defaultUsers = [
+                { email: 'farmer@example.com', password: 'farmer123', userType: 'farmer' },
+                { email: 'consumer@example.com', password: 'consumer123', userType: 'consumer' },
+                { email: 'admin@example.com', password: 'admin123', userType: 'admin' }
+            ];
+            localStorage.setItem('agriConnectUsers', JSON.stringify(defaultUsers));
+        }
+
+        // Initialize current user session
+        if (!localStorage.getItem('currentUser')) {
+            localStorage.setItem('currentUser', JSON.stringify(null));
+        }
+
+        function switchLoginForm(userType) {
+            // Hide all login forms
+            document.querySelectorAll('.login-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected login form
+            document.getElementById(userType + 'LoginForm').style.display = 'block';
+            document.getElementById(userType + 'Tab').classList.add('active');
+            
+            // Clear messages
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('successMessage').textContent = '';
+        }
+
+        function showRegisterForm(userType) {
+            // Hide all forms
+            document.querySelectorAll('.login-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            // Set up registration form
+            document.getElementById('registerTitle').textContent = `Register as ${userType.charAt(0).toUpperCase() + userType.slice(1)}`;
+            document.getElementById('registerUserType').value = userType;
+            document.getElementById('registerForm').style.display = 'block';
+            
+            // Clear messages
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('successMessage').textContent = '';
+            
+            return false; // Prevent default anchor behavior
+        }
+
+        function showLoginForm() {
+            // Hide registration form
+            document.getElementById('registerForm').style.display = 'none';
+            
+            // Show the appropriate login form based on last active tab
+            const activeTab = document.querySelector('.tab-btn.active');
+            if (activeTab) {
+                const userType = activeTab.id.replace('Tab', '');
+                document.getElementById(userType + 'LoginForm').style.display = 'block';
+            } else {
+                // Default to farmer login if no active tab
+                document.getElementById('farmerLoginForm').style.display = 'block';
+                document.getElementById('farmerTab').classList.add('active');
+            }
+            
+            return false; // Prevent default anchor behavior
+        }
+
+        function handleLogin(event, userType) {
+            event.preventDefault();
+            const email = document.getElementById(userType + 'Email').value;
+            const password = document.getElementById(userType + 'Password').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
+            }
+
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('agriConnectUsers'));
+            
+            // Find matching user
+            const user = users.find(u => 
+                u.email === email && 
+                u.password === password && 
+                u.userType === userType
+            );
+
+            if (user) {
+                // Store current user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Show success message
+                showSuccess('Login successful! Redirecting...');
+                
+                // Redirect based on user type after a short delay
+                setTimeout(() => {
+                    switch(userType) {
+                        case 'farmer':
+                            window.location.href = 'farmers.html';
+                            break;
+                        case 'consumer':
+                            window.location.href = 'index.html';
+                            break;
+                        case 'admin':
+                            window.location.href = 'admin1.html';
+                            break;
+                    }
+                }, 1000);
+            } else {
+                showError('Invalid email or password');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const userType = document.getElementById('registerUserType').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Validation
+            if (!email || !password || !confirmPassword) {
+                showError('Please fill all fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('agriConnectUsers'));
+            
+            // Check if email already exists
+            if (users.some(u => u.email === email)) {
+                showError('Email already registered');
+                return;
+            }
+
+            // Add new user
+            const newUser = {
+                email,
+                password,
+                userType
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('agriConnectUsers', JSON.stringify(users));
+            
+            // Show success message
+            showSuccess('Registration successful! Please login.');
+            
+            // Clear form
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerConfirmPassword').value = '';
+            
+            // Auto switch to login after 2 seconds
+            setTimeout(() => {
+                showLoginForm();
+                document.getElementById('errorMessage').textContent = '';
+                document.getElementById('successMessage').textContent = '';
+            }, 2000);
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Initialize the page with farmer login form
+        document.addEventListener('DOMContentLoaded', function() {
+            switchLoginForm('farmer');
+        });
+    </script>
+    <script type="text/javascript">
+        function googleTranslateElementInit(){
+            new google.translate.TranslateElement(
+                {pageLanguage : 'en'},'google_translate_element');
+        }
+        </script>
+        <script type ="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

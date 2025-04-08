@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmConnect | Dashboard</title>
+  <meta name="google" content="notranslate">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link rel="stylesheet" href="farmers.css">
+</head>
+<body>
+    <div id="google_translate_element"></div>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-seedling"></i>
+          <span class="logo-text">FarmConnect</span>
+          <button class="toggle-btn" id="sidebarToggle" aria-label="Toggle Sidebar">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="farmer-info" id="farmerInfo">
+        <img src="https://via.placeholder.com/80/80" alt="Farmer profile" class="profile-img">
+        <div class="farmer-details">
+          <h3>Sarah Johnson</h3>
+          <p>Premium Farmer | ID: F12345</p>
+          <span class="status-indicator online">Online</span>
+        </div>
+      </div>
+      
+      <div class="menu" id="sidebarMenu">
+        <div class="menu-item active" data-page="dashboard">
+          <i class="fas fa-home"></i>
+          <span class="menu-label">Dashboard</span>
+          <span class="notification-badge">3</span>
+        </div>
+        
+        <div class="menu-item" data-page="orders">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="menu-label">Orders</span>
+          <span class="notification-badge">5</span>
+        </div>
+        <div class="menu-item" data-page="customers">
+          <i class="fas fa-users"></i>
+          <span class="menu-label">Customers</span>
+        </div>
+        <div class="menu-item" data-page="inventory">
+          <i class="fas fa-warehouse"></i>
+          <span class="menu-label">Inventory</span>
+        </div>
+      
+        <div class="menu-item" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span class="menu-label">Settings</span>
+        </div>
+        <div class="menu-item logout" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <a href="login.html">
+          <span class="menu-label">Logout</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h1 class="page-title">Farm Dashboard</h1>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" id="globalSearch" placeholder="Search anything..." aria-label="Global Search">
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div class="page active" id="dashboard-page">
+        <div class="weather-widget">
+          <div class="weather-info">
+            <div class="weather-location">Springfield Farm, IL</div>
+            <div class="weather-date">April 3, 2025 | Thursday</div>
+            <div class="weather-temp">72°F</div>
+            <div class="weather-desc">Partly Cloudy</div>
+          </div>
+          <div class="weather-details">
+            <div class="weather-detail">
+              <div class="weather-detail-label">Humidity</div>
+              <div class="weather-detail-value"><i class="fas fa-tint"></i> 65%</div>
+            </div>
+            <div class="weather-detail">
+              <div class="weather-detail-label">Wind</div>
+              <div class="weather-detail-value"><i class="fas fa-wind"></i> 8 mph</div>
+            </div>
+            <div class="weather-detail">
+              <div class="weather-detail-label">Rainfall</div>
+              <div class="weather-detail-value"><i class="fas fa-cloud-rain"></i> 0.2 in</div>
+            </div>
+            <div class="weather-detail">
+              <div class="weather-detail-label">UV Index</div>
+              <div class="weather-detail-value"><i class="fas fa-sun"></i> 4</div>
+            </div>
+          </div>
+          <div><i class="fas fa-cloud-sun" style="font-size: 4rem; color: #FF9800;"></i></div>
+        </div>
+
+        <div class="widgets">
+          <div class="widget widget-sales">
+            <div class="widget-header">
+              <div class="widget-title">Total Sales</div>
+              <div class="widget-icon"><i class="fas fa-dollar-sign"></i></div>
+            </div>
+            <div class="widget-value">$12,345.67</div>
+            <div class="widget-change change-positive"><i class="fas fa-arrow-up"></i> 15.3%</div>
+          </div>
+          <div class="widget widget-orders">
+            <div class="widget-header">
+              <div class="widget-title">Pending Orders</div>
+              <div class="widget-icon"><i class="fas fa-shopping-cart"></i></div>
+            </div>
+            <div class="widget-value">156</div>
+            <div class="widget-change change-positive"><i class="fas fa-arrow-up"></i> 10%</div>
+          </div>
+          <div class="widget widget-customers">
+            <div class="widget-header">
+              <div class="widget-title">Active Customers</div>
+              <div class="widget-icon"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="widget-value">245</div>
+            <div class="widget-change change-positive"><i class="fas fa-arrow-up"></i> 8.2%</div>
+          </div>
+          <div class="widget widget-views">
+            <div class="widget-header">
+              <div class="widget-title">Product Views</div>
+              <div class="widget-icon"><i class="fas fa-eye"></i></div>
+            </div>
+            <div class="widget-value">3,892</div>
+            <div class="widget-change change-negative"><i class="fas fa-arrow-down"></i> 2.5%</div>
+          </div>
+        </div>
+
+        <div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Recent Orders</h2>
+    <div class="controls">
+      <input type="text" id="recentOrdersSearch" placeholder="Search orders..." aria-label="Search recent orders">
+      <select id="recentOrdersFilter">
+        <option value="all">All Statuses</option>
+        <option value="completed">Completed</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <button class="btn-primary" id="exportOrdersBtn" title="Export to CSV"><i class="fas fa-download"></i> Export</button>
+      <a href="#" class="view-all" onclick="switchToOrdersPage()">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table id="recentOrdersTable">
+      <thead>
+        <tr>
+          <th data-sort="orderId" class="sortable">Order ID <i class="fas fa-sort"></i></th>
+          <th data-sort="customer" class="sortable">Customer <i class="fas fa-sort"></i></th>
+          <th data-sort="product" class="sortable">Product <i class="fas fa-sort"></i></th>
+          <th data-sort="status" class="sortable">Status <i class="fas fa-sort"></i></th>
+          <th data-sort="date" class="sortable">Date <i class="fas fa-sort"></i></th>
+          <th data-sort="total" class="sortable">Total <i class="fas fa-sort"></i></th>
+          <th>Progress</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="recentOrdersBody">
+        <tr data-tooltip="Order placed on 2025-04-02 10:30 AM">
+          <td>#5892</td>
+          <td>John Doe</td>
+          <td>Organic Tomatoes</td>
+          <td><span class="status status-completed">Completed</span></td>
+          <td>2025-04-02</td>
+          <td>$126.99</td>
+          <td><div class="progress-bar" style="width: 100%; background-color: #4CAF50;"></div></td>
+          <td>
+            <button class="btn-primary" onclick="viewOrder('#5892')">View</button>
+            <button class="btn-danger" onclick="cancelOrder('#5892')" disabled>Cancel</button>
+          </td>
+        </tr>
+        <tr data-tooltip="Order placed on 2025-04-02 09:15 AM">
+          <td>#5891</td>
+          <td>Sarah Miller</td>
+          <td>Fresh Lettuce</td>
+          <td><span class="status status-processing">Processing</span></td>
+          <td>2025-04-02</td>
+          <td>$85.50</td>
+          <td><div class="progress-bar" style="width: 50%; background-color: #FF8F00;"></div></td>
+          <td>
+            <button class="btn-primary" onclick="viewOrder('#5891')">View</button>
+            <button class="btn-danger" onclick="cancelOrder('#5891')">Cancel</button>
+          </td>
+        </tr>
+        <tr data-tooltip="Order shipped on 2025-04-01 02:00 PM">
+          <td>#5890</td>
+          <td>Robert Johnson</td>
+          <td>Farm Fresh Eggs</td>
+          <td><span class="status status-shipped">Shipped</span></td>
+          <td>2025-04-01</td>
+          <td>$210.75</td>
+          <td><div class="progress-bar" style="width: 75%; background-color: #1565C0;"></div></td>
+          <td>
+            <button class="btn-primary" onclick="viewOrder('#5890')">View</button>
+            <button class="btn-danger" onclick="cancelOrder('#5890')" disabled>Cancel</button>
+          </td>
+        </tr>
+        <tr data-tooltip="Order completed on 2025-04-01 11:45 AM">
+          <td>#5889</td>
+          <td>Emily Clark</td>
+          <td>Honey</td>
+          <td><span class="status status-completed">Completed</span></td>
+          <td>2025-04-01</td>
+          <td>$90.40</td>
+          <td><div class="progress-bar" style="width: 100%; background-color: #4CAF50;"></div></td>
+          <td>
+            <button class="btn-primary" onclick="viewOrder('#5889')">View</button>
+            <button class="btn-danger" onclick="cancelOrder('#5889')" disabled>Cancel</button>
+          </td>
+        </tr>
+        <tr data-tooltip="Order cancelled on 2025-03-31 03:20 PM">
+          <td>#5888</td>
+          <td>Michael Brown</td>
+          <td>Blueberries</td>
+          <td><span class="status status-cancelled">Cancelled</span></td>
+          <td>2025-03-31</td>
+          <td>$97.85</td>
+          <td><div class="progress-bar" style="width: 0%; background-color: #C62828;"></div></td>
+          <td>
+            <button class="btn-primary" onclick="viewOrder('#5888')">View</button>
+            <button class="btn-danger" onclick="cancelOrder('#5888')" disabled>Cancel</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+      </div>
+
+      
+
+     <!-- Orders Page -->
+<div class="page" id="orders-page">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Order Management</h2>
+      <div class="controls">
+        <input type="text" id="orderSearch" placeholder="Search orders..." aria-label="Search orders">
+        <select id="orderFilter">
+          <option value="all">All Statuses</option>
+          <option value="Completed">Completed</option>
+          <option value="Processing">Processing</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table id="ordersTable">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody">
+          <tr>
+            <td>#5892</td>
+            <td>John Doe</td>
+            <td>Organic Tomatoes</td>
+            <td>20</td>
+            <td><span class="status status-completed">Completed</span></td>
+            <td>2025-04-02</td>
+            <td>$126.99</td>
+            <td>Paid (Visa)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5892')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5892')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5891</td>
+            <td>Sarah Miller</td>
+            <td>Fresh Lettuce</td>
+            <td>5</td>
+            <td><span class="status status-processing">Processing</span></td>
+            <td>2025-04-02</td>
+            <td>$85.50</td>
+            <td>Pending</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5891')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5891')">Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5890</td>
+            <td>Robert Johnson</td>
+            <td>Farm Fresh Eggs</td>
+            <td>30</td>
+            <td><span class="status status-shipped">Shipped</span></td>
+            <td>2025-04-01</td>
+            <td>$210.75</td>
+            <td>Paid (MC)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5890')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5890')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5889</td>
+            <td>Emily Clark</td>
+            <td>Honey</td>
+            <td>2</td>
+            <td><span class="status status-completed">Completed</span></td>
+            <td>2025-04-01</td>
+            <td>$90.40</td>
+            <td>Paid (PayPal)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5889')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5889')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5888</td>
+            <td>Michael Brown</td>
+            <td>Blueberries</td>
+            <td>10</td>
+            <td><span class="status status-cancelled">Cancelled</span></td>
+            <td>2025-03-31</td>
+            <td>$97.85</td>
+            <td>Refunded</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5888')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5888')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5887</td>
+            <td>Lisa White</td>
+            <td>Organic Carrots</td>
+            <td>15</td>
+            <td><span class="status status-completed">Completed</span></td>
+            <td>2025-03-30</td>
+            <td>$75.00</td>
+            <td>Paid (Visa)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5887')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5887')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5886</td>
+            <td>David Green</td>
+            <td>Milk</td>
+            <td>10</td>
+            <td><span class="status status-shipped">Shipped</span></td>
+            <td>2025-03-29</td>
+            <td>$45.00</td>
+            <td>Paid (MC)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5886')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5886')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5885</td>
+            <td>Anna Taylor</td>
+            <td>Strawberries</td>
+            <td>8</td>
+            <td><span class="status status-processing">Processing</span></td>
+            <td>2025-03-28</td>
+            <td>$60.80</td>
+            <td>Pending</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5885')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5885')">Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5884</td>
+            <td>James Lee</td>
+            <td>Cheese</td>
+            <td>3</td>
+            <td><span class="status status-completed">Completed</span></td>
+            <td>2025-03-27</td>
+            <td>$36.00</td>
+            <td>Paid (PayPal)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5884')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5884')" disabled>Cancel</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#5883</td>
+            <td>Maria Garcia</td>
+            <td>Spinach</td>
+            <td>12</td>
+            <td><span class="status status-shipped">Shipped</span></td>
+            <td>2025-03-26</td>
+            <td>$48.00</td>
+            <td>Paid (Visa)</td>
+            <td>
+              <button class="btn-primary" onclick="viewOrder('#5883')">View</button>
+              <button class="btn-danger" onclick="cancelOrder('#5883')" disabled>Cancel</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button onclick="changeOrderPage(-1)">Previous</button>
+      <span id="orderPageNumbers"></span>
+      <button onclick="changeOrderPage(1)">Next</button>
+    </div>
+  </div>
+</div>
+     <!-- Customers Page -->
+<div class="page" id="customers-page">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Customer Directory</h2>
+      <div class="controls">
+        <input type="text" id="customerSearch" placeholder="Search customers..." aria-label="Search customers">
+        <select id="customerSort">
+          <option value="name">Sort by Name</option>
+          <option value="orders">Sort by Orders</option>
+          <option value="date">Sort by Join Date</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table id="customersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Join Date</th>
+            <th>Total Orders</th>
+            <th>Total Spent</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="customersBody">
+          <tr>
+            <td>C001</td>
+            <td>John Doe</td>
+            <td>john.doe@example.com</td>
+            <td>(555) 123-4567</td>
+            <td>2023-01-15</td>
+            <td>12</td>
+            <td>$1,234.56</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C001')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C001')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C002</td>
+            <td>Sarah Miller</td>
+            <td>sarah.miller@example.com</td>
+            <td>(555) 234-5678</td>
+            <td>2023-06-20</td>
+            <td>8</td>
+            <td>$876.45</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C002')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C002')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C003</td>
+            <td>Robert Johnson</td>
+            <td>robert.j@example.com</td>
+            <td>(555) 345-6789</td>
+            <td>2022-11-10</td>
+            <td>15</td>
+            <td>$2,145.78</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C003')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C003')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C004</td>
+            <td>Emily Clark</td>
+            <td>emily.clark@example.com</td>
+            <td>(555) 456-7890</td>
+            <td>2024-02-01</td>
+            <td>5</td>
+            <td>$456.89</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C004')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C004')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C005</td>
+            <td>Michael Brown</td>
+            <td>michael.b@example.com</td>
+            <td>(555) 567-8901</td>
+            <td>2023-03-15</td>
+            <td>10</td>
+            <td>$987.65</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C005')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C005')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C006</td>
+            <td>Lisa White</td>
+            <td>lisa.white@example.com</td>
+            <td>(555) 678-9012</td>
+            <td>2023-08-22</td>
+            <td>7</td>
+            <td>$654.32</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C006')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C006')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C007</td>
+            <td>David Green</td>
+            <td>david.green@example.com</td>
+            <td>(555) 789-0123</td>
+            <td>2022-09-05</td>
+            <td>9</td>
+            <td>$1,123.45</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C007')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C007')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C008</td>
+            <td>Anna Taylor</td>
+            <td>anna.taylor@example.com</td>
+            <td>(555) 890-1234</td>
+            <td>2024-01-10</td>
+            <td>6</td>
+            <td>$543.21</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C008')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C008')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C009</td>
+            <td>James Lee</td>
+            <td>james.lee@example.com</td>
+            <td>(555) 901-2345</td>
+            <td>2023-12-15</td>
+            <td>11</td>
+            <td>$1,345.67</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C009')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C009')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C010</td>
+            <td>Maria Garcia</td>
+            <td>maria.garcia@example.com</td>
+            <td>(555) 012-3456</td>
+            <td>2022-07-20</td>
+            <td>13</td>
+            <td>$1,678.90</td>
+            <td>
+              <button class="btn-primary" onclick="viewCustomer('C010')">View</button>
+              <button class="btn-danger" onclick="deleteCustomer('C010')">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button onclick="changeCustomerPage(-1)">Previous</button>
+      <span id="customerPageNumbers"></span>
+      <button onclick="changeCustomerPage(1)">Next</button>
+    </div>
+  </div>
+</div>
+      <!-- Inventory Page -->
+     <div class="page" id="inventory-page">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Inventory Management</h2>
+      <div class="controls">
+        <input type="text" id="inventorySearch" placeholder="Search inventory..." aria-label="Search inventory">
+        <select id="inventoryFilter">
+          <option value="all">All Stock Levels</option>
+          <option value="low">Low Stock (<10)</option>
+          <option value="medium">Medium Stock (10-50)</option>
+          <option value="high">High Stock (>50)</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table id="inventoryTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Last Updated</th>
+            <th>Supplier</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryBody">
+          <tr>
+            <td>I001</td>
+            <td>Organic Tomatoes</td>
+            <td>Vegetables</td>
+            <td>50</td>
+            <td>2025-04-02</td>
+            <td>Green Fields</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I001')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I001')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I002</td>
+            <td>Fresh Lettuce</td>
+            <td>Vegetables</td>
+            <td>30</td>
+            <td>2025-04-02</td>
+            <td>Leafy Greens</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I002')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I002')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I003</td>
+            <td>Farm Fresh Eggs</td>
+            <td>Dairy</td>
+            <td>100</td>
+            <td>2025-04-01</td>
+            <td>Eggcellent Farms</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I003')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I003')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I004</td>
+            <td>Honey</td>
+            <td>Other</td>
+            <td>20</td>
+            <td>2025-04-01</td>
+            <td>Bee Happy</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I004')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I004')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I005</td>
+            <td>Blueberries</td>
+            <td>Fruits</td>
+            <td>40</td>
+            <td>2025-03-31</td>
+            <td>Berry Bliss</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I005')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I005')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I006</td>
+            <td>Organic Carrots</td>
+            <td>Vegetables</td>
+            <td>60</td>
+            <td>2025-03-30</td>
+            <td>Root Farms</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I006')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I006')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I007</td>
+            <td>Milk</td>
+            <td>Dairy</td>
+            <td>25</td>
+            <td>2025-03-29</td>
+            <td>Dairy Delight</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I007')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I007')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I008</td>
+            <td>Strawberries</td>
+            <td>Fruits</td>
+            <td>8</td>
+            <td>2025-03-28</td>
+            <td>Berry Bliss</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I008')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I008')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I009</td>
+            <td>Cheese</td>
+            <td>Dairy</td>
+            <td>15</td>
+            <td>2025-03-27</td>
+            <td>Dairy Delight</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I009')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I009')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I010</td>
+            <td>Spinach</td>
+            <td>Vegetables</td>
+            <td>45</td>
+            <td>2025-03-26</td>
+            <td>Leafy Greens</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I010')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I010')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I011</td>
+            <td>Apples</td>
+            <td>Fruits</td>
+            <td>75</td>
+            <td>2025-03-25</td>
+            <td>Orchard Valley</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I011')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I011')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I012</td>
+            <td>Potatoes</td>
+            <td>Vegetables</td>
+            <td>90</td>
+            <td>2025-03-24</td>
+            <td>Root Farms</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I012')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I012')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I013</td>
+            <td>Butter</td>
+            <td>Dairy</td>
+            <td>5</td>
+            <td>2025-03-23</td>
+            <td>Dairy Delight</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I013')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I013')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I014</td>
+            <td>Raspberries</td>
+            <td>Fruits</td>
+            <td>35</td>
+            <td>2025-03-22</td>
+            <td>Berry Bliss</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I014')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I014')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I015</td>
+            <td>Broccoli</td>
+            <td>Vegetables</td>
+            <td>20</td>
+            <td>2025-03-21</td>
+            <td>Green Fields</td>
+            <td>
+              <button class="btn-primary" onclick="updateInventory('I015')">Update</button>
+              <button class="btn-danger" onclick="deleteInventory('I015')">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button onclick="changeInventoryPage(-1)">Previous</button>
+      <span id="inventoryPageNumbers"></span>
+      <button onclick="changeInventoryPage(1)">Next</button>
+    </div>
+  </div>
+</div>
+
+      <!-- Settings Page -->
+     <div class="page" id="settings-page">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Account Settings</h2>
+    </div>
+    <div class="settings-form">
+      <div class="form-group">
+        <label>Farm Name:</label>
+        <input type="text" value="Springfield Farm" id="farmName">
+      </div>
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" value="sarah.johnson@farmconnect.com" id="email">
+      </div>
+      <div class="form-group">
+        <label>Phone:</label>
+        <input type="tel" value="(555) 123-4567" id="phone">
+      </div>
+      <div class="form-group">
+        <label>Secondary Contact Number:</label>
+        <input type="tel" value="(555) 987-6543" id="secondaryPhone">
+      </div>
+      <div class="form-group">
+        <label>Farm Address:</label>
+        <input type="text" value="1234 Harvest Lane, Springfield, IL" id="farmAddress">
+      </div>
+      <div class="form-group">
+        <label>Theme:</label>
+        <select id="themeSelect">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="nature">Nature</option>
+          <option value="high-contrast">High Contrast</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notifications:</label>
+        <input type="checkbox" id="notificationToggleEmail" checked>
+        <span>Email Notifications</span>
+        <input type="checkbox" id="notificationToggleSMS">
+        <span>SMS Notifications</span>
+        <input type="checkbox" id="notificationToggleApp">
+        <span>App Push Notifications</span>
+      </div>
+      <div class="form-group">
+        <label>Timezone:</label>
+        <select id="timezone">
+          <option value="CST">CST (Central Standard Time)</option>
+          <option value="EST">EST (Eastern Standard Time)</option>
+          <option value="PST">PST (Pacific Standard Time)</option>
+          <option value="MST">MST (Mountain Standard Time)</option>
+          <option value="AST">AST (Alaska Standard Time)</option>
+          <option value="HST">HST (Hawaii Standard Time)</option>
+          <option value="UTC">UTC (Coordinated Universal Time)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Language:</label>
+        <select id="language">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Default Currency:</label>
+        <select id="currency">
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - British Pound</option>
+          <option value="CAD">CAD - Canadian Dollar</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Measurement Units:</label>
+        <select id="units">
+          <option value="imperial">Imperial (lbs, ft, acres)</option>
+          <option value="metric">Metric (kg, m, hectares)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Account Role:</label>
+        <select id="role">
+          <option value="owner">Farm Owner</option>
+          <option value="manager">Farm Manager</option>
+          <option value="worker">Farm Worker</option>
+          <option value="viewer">Viewer Only</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+</div>
+  <script src="farmers.js"></script>
+  <script type="text/javascript">
+    function googleTranslateElementInit(){
+        new google.translate.TranslateElement(
+            {pageLanguage : 'en'},'google_translate_element');
+    }
+    </script>
+    <script type ="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
