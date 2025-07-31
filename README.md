@@ -85,3 +85,17 @@
 
 ## 📂 Folder Structure (Optional Visual)
 
+AgriConnect/
+├── index.html
+├── login.html
+├── Cart.html
+├── checkoutpage.html
+├── customers.html
+├── farmers.html
+├── farmers.css
+├── farmers.js
+├── admin1.html
+├── admin1.css
+├── admin1.js
+├── agri.mp4
+└── README.md
